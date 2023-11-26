@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react'
+import TablaTickets from './components/TablaTickets';
 
 function Soporte() {
   return <>
@@ -10,7 +11,7 @@ function Soporte() {
           <div>Proyecto</div>
         </header>
         <section className=' h-full w-full flex flex-col'>
-            
+            <TablaTickets />
         </section>
     </main>
   </>
