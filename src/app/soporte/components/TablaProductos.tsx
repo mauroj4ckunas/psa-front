@@ -1,57 +1,74 @@
-import React from 'react';
+'use client'
+import React, { useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
-import Link from 'next/link';
 import { producto } from '../models/producto';
-import DetallesProducto from './DetalleProducto';
+import { FaEye, FaRegTrashAlt } from "react-icons/fa";
+import PanelCrearProducto from './PanelCrearProducto';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
+import { useRouter } from 'next/navigation';
 
-function generarProductoAleatorio(): producto {
-  const producto: producto = {
-    producto_id: Math.floor(Math.random() * 1000), // Genera un ID aleatorio
-    proyecto_id: Math.floor(Math.random() * 100), // Genera un ID de proyecto aleatorio
-    version: `v${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`, // Genera una versión aleatoria
-    ticket_ids: Array.from({ length: Math.floor(Math.random() * 5) }, () => Math.floor(Math.random() * 100)), // Genera IDs de tickets aleatorios
-    client_ids: Array.from({ length: Math.floor(Math.random() * 3) }, () => Math.floor(Math.random() * 50)), // Genera IDs de clientes aleatorios
-    createdAt: new Date(), // Fecha actual como ejemplo (puede ser null si se desea)
-    updatedAt: null, // Puede ser null si se desea
-  };
-  return producto;
+interface Props {
+  listaDeProductos: producto[],
 }
 
-function DetallesButton({ id }: { id: number }) {
-  return (
-    <Link href={`/producto/${id}`}>
-      <a>Ver más</a>
-    </Link>
-  );
-}
+const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 
-function DetallesCell(props: any) {
-  const { rowData } = props;
-  return <DetallesButton id={rowData.producto_id} />;
-}
+function TablaProductos({ listaDeProductos }: Props) {
 
-
-function TablaProductos() {
-
-  const listaDeProductos: producto[] = [];
-
-  for (let i = 0; i < 10; i++) {
-    const nuevoProducto = generarProductoAleatorio();
-    listaDeProductos.push(nuevoProducto);
+  const router = useRouter();
+  const toast = useRef<Toast>(null);
+  const eliminar = (producto: producto) => {
+    const url = `${url_base}/productos/${producto.producto_id}`
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+              toast.current?.show({ severity: 'info', summary: 'Eliminación exitosa', detail: 'El producto fue eliminado.', life: 3000 });
+              router.refresh();
+            }
+        })
   }
 
+  const confirmarEliminar = (producto: producto) => {
+    confirmDialog({
+        message: 'En caso de proseguir, el producto se eliminará indefinidamente',
+        header: 'Confirme borrado de producto',
+        icon: 'pi pi-exclamation-triangle',
+        acceptClassName: ' mx-2 px-4 py-2 rounded-md bg-red-500 font-semibold hover:bg-red-300',
+        rejectClassName: ' mx-2 px-4 py-2 rounded-md bg-white-500 font-semibold',
+        accept: () => eliminar(producto),
+    });
+  };
+
+  const accionesProducto = (producto: producto) => {
+      return <div className='w-3/4 flex justify-around items-center'>
+        <div className=' bg-red-500 text-white rounded-md p-3 text-xl hover:bg-red-300 hover:text-slate-200 cursor-pointer' onClick={() => confirmarEliminar(producto)}><FaRegTrashAlt /></div>
+        <div className=' bg-slate-500 text-white rounded-md p-3 text-xl hover:bg-slate-300 hover:text-slate-500 cursor-pointer'><FaEye /></div>
+      </div>;
+  };
+
+  const [panel, setPanel] = useState<boolean>(false);
+
+  const agregarProducto = (
+    <div className='w-full flex justify-end items-center' onClick={() => setPanel(true)}>
+      <button className='font-bold px-4 py-2 bg-blue-300 rounded-md hover:bg-blue-500'>Agregar Producto</button>
+    </div>
+  );
+
   return <>
-    <DataTable value={listaDeProductos} tableStyle={{ minWidth: '50rem' }}>
-      <Column field="producto_id" header="Producto ID"></Column>
-      <Column field="proyecto_id" header="Proyecto ID"></Column>
-      <Column field="version" header="Versión"></Column>
-      <Column field="ticket_ids" header="Tickets"></Column>
-      <Column field="client_ids" header="Clientes"></Column>
-    </DataTable>
-  </>
+      <DataTable value={listaDeProductos} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}  header={agregarProducto} tableStyle={{ minWidth: '50rem' }}>
+        <Column field="producto_id" header="Producto ID"></Column>
+        <Column field="proyecto_id" header="Proyecto ID"></Column>
+        <Column field="version" header="Versión"></Column>
+        <Column header="" body={(row) => accionesProducto(row)}></Column>
+      </DataTable>
+      <PanelCrearProducto visible={panel} onHide={() => setPanel(false)} />
+      <ConfirmDialog draggable={false}/>
+      <Toast ref={toast} />
+    </>
 }
 
 export default TablaProductos;
