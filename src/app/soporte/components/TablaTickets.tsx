@@ -19,7 +19,8 @@ const tickets: ticket[] = [
       severidad: "Crítica",
       categoria: "Infraestructura",
       estado: "Abierto",
-      proyecto: "Red de servidores internos"
+      createdAt: null,
+      updatedAt: null
   },
   {
       ticket_id: 2,
@@ -33,7 +34,8 @@ const tickets: ticket[] = [
       severidad: "Moderada",
       categoria: "Software",
       estado: "En revisión",
-      proyecto: "App móvil FinanzasPlus"
+      createdAt: null,
+      updatedAt: null
   }
   // Puedes agregar más tickets aquí
 ];

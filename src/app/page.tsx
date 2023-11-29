@@ -7,7 +7,7 @@ export default function Home() {
         <header className=' w-full h-[20%] flex flex-grow justify-between text-black font-bold'>
           <Link href={'/'}>PSA</Link>
           <Link href={'/soporte'}>Soporte</Link>
-          <div>Proyecto</div>
+          <Link href={'/proyecto'}>Proyecto</Link>
         </header>
     </main>
   )
