@@ -12,7 +12,7 @@ const Proyecto: React.FC = () => {
             Listado de Proyectos
           </div>
           <Button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-            Nuevo Proyecto
+            + Nuevo
           </Button>
         </header>
         <section className="h-full w-full flex flex-col">

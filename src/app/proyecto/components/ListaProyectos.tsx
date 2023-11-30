@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { proyecto } from '../models/proyecto';
@@ -11,40 +11,36 @@ import { Button } from 'primereact/button';
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 
-function ListaProyectos() {
+async function ListaProyectos() {
 
-    const proyectos: proyecto[] = [
-        {
-            id: 1,
-            nombre: 'SCX',
-            descripcion: 'Sistema Clientes X28',
-            fechaInicio: new Date('2023-01-01').toISOString(),
-            fechaFin: new Date('2024-01-01').toISOString(),
-            estadoIdm: 1,
-            liderId: 1
-        },
-        {
-            id: 2,
-            nombre: 'Boarding',
-            descripcion: 'Sistema Boarding',
-            fechaInicio: new Date('2023-02-02').toISOString(),
-            fechaFin: new Date('2024-02-02').toISOString(),
-            estadoIdm: 1,
-            liderId: 2
-        },
-    ];
+    let proyectos = []
 
-    const modificarProyecto = (id) => {
-        alert(id)
+    await fetch("http://localhost:8080/proyecto")
+        .then((res) => {
+            return res.json()
+        })
+        .then((data) => {
+            proyectos = data
+        })
+
+    const modificarProyecto = async (id) => {
+        await fetch("http://localhost:8080/proyecto/" + id)
+        .then((res) => {
+            return res.json()
+        })
+        .then((data) => {
+            console.log(data)
+        })
+
     }
-    
+
     const eliminarProyecto = (id) => {
         alert(id)
     }
 
     const accionesProyecto = (proyecto) => {
         return <div className='w-3/4 flex justify-around items-center'>
-            <div className='p-3 text-xl hover:text-cyan-500 cursor-pointer'><FaRegEdit /></div>
+            <div className='p-3 text-xl hover:text-cyan-500 cursor-pointer' onClick={async () => await modificarProyecto(proyecto.id)}><FaRegEdit /></div>
             <div className='p-3 text-xl hover:text-red-500 cursor-pointer' onClick={() => eliminarProyecto(proyecto.id)}><FaRegTrashAlt /></div>
         </div>;
     };
@@ -54,10 +50,9 @@ function ListaProyectos() {
             <Column field="descripcion" header="Descripción"></Column>
             <Column field="fechaInicio" header="Fecha Inicio"></Column>
             <Column field="fechaFin" header="Fecha Fin"></Column>
-            <Column field="estadoIdm" header="Estado"></Column>
-            <Column field="liderId" header="Líder"></Column>
+            <Column field="estado.descripcion" header="Estado"></Column>
+            <Column field="liderAsignadoId" header="Líder"></Column>
             <Column header="Acciones" body={(row) => accionesProyecto(row)}></Column>
-
         </DataTable>
     </>
 }
