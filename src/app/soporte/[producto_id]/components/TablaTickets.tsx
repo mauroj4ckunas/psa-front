@@ -10,6 +10,7 @@ import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { FaEye, FaRegTrashAlt } from 'react-icons/fa';
 import DetalleTicket from './DetalleTicket';
+import PanelCrearTicket from './PanelCrearTicket';
 
 interface Props {
   listaDeTickets: ticket[]
@@ -20,6 +21,7 @@ const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 
 function TablaTickets({ listaDeTickets }: Props) {
 
+  const [crearTicket, setCrearTicket] = useState<boolean>(false);
   const [panel, setPanel] = useState<boolean>(false);
   const [verTicket, setVerTicket] = useState<ticket | null>(null);
   const router = useRouter();
@@ -58,14 +60,21 @@ function TablaTickets({ listaDeTickets }: Props) {
     setVerTicket(null);
   }
 
+  const agregarTicket = (
+    <div className='w-full flex justify-end items-center'>
+      <button className='font-bold px-4 py-2 bg-blue-300 rounded-md hover:bg-blue-500' onClick={() => setCrearTicket(true)}>Agregar Ticket</button>
+    </div>
+  );
+  
   return <>
-    <DataTable value={listaDeTickets} tableStyle={{ minWidth: '50rem' }}>
+    <DataTable value={listaDeTickets} header={agregarTicket} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
         <Column field="ticket_id" header="Id"></Column>
         <Column field="nombre" header="Nombre"></Column>
         <Column field="prioridad" header="Prioridad"></Column>
         <Column field="descripcion" header="Descripcion"></Column>
         <Column header="" body={(row) => accionesTicket(row)}></Column>
     </DataTable>
+    <PanelCrearTicket visible={crearTicket} onHide={() => setCrearTicket(false)}/>
     <ConfirmDialog draggable={false}/>
     {verTicket && <DetalleTicket visible={panel} onHide={onHide} ticket={verTicket}/>}
     <Toast ref={toast} />
