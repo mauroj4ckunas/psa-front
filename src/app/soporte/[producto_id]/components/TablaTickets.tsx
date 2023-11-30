@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { FaEye, FaRegTrashAlt } from 'react-icons/fa';
-import PanelDataTicket from './PanelDataTicket';
+import DetalleTicket from './DetalleTicket';
 
 interface Props {
   listaDeTickets: ticket[]
@@ -67,7 +67,7 @@ function TablaTickets({ listaDeTickets }: Props) {
         <Column header="" body={(row) => accionesTicket(row)}></Column>
     </DataTable>
     <ConfirmDialog draggable={false}/>
-    {verTicket && <PanelDataTicket visible={panel} onHide={onHide} ticket={verTicket}/>}
+    {verTicket && <DetalleTicket visible={panel} onHide={onHide} ticket={verTicket}/>}
     <Toast ref={toast} />
   </>
 }

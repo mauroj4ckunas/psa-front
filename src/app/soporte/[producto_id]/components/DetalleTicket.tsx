@@ -8,7 +8,7 @@ interface Props {
     ticket: ticket,
 }
 
-function PanelDataTicket({ visible, onHide, ticket }: Props) {
+function DetalleTicket({ visible, onHide, ticket }: Props) {
   return <>
     <Dialog visible={visible} onHide={onHide} draggable={false} closeOnEscape>
     <form className="p-4 space-y-4 w-50">
@@ -61,4 +61,4 @@ function PanelDataTicket({ visible, onHide, ticket }: Props) {
   </>
 }
 
-export default PanelDataTicket
+export default DetalleTicket;
