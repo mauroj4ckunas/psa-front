@@ -1,17 +1,15 @@
 'use client'
-import React, { useEffect } from 'react';
+import React from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { proyecto } from '../models/proyecto';
-import { Edit } from '@mui/icons-material/Edit';
-import { Delete } from '@mui/icons-material/Delete';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
-import { Button } from 'primereact/button';
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { useRouter } from 'next/navigation'
 
 
 async function ListaProyectos() {
+    const router = useRouter()
 
     let proyectos = []
 
@@ -24,14 +22,7 @@ async function ListaProyectos() {
         })
 
     const modificarProyecto = async (id) => {
-        await fetch("http://localhost:8080/proyecto/" + id)
-        .then((res) => {
-            return res.json()
-        })
-        .then((data) => {
-            console.log(data)
-        })
-
+        router.push('/proyecto/modificar?id=' + id);
     }
 
     const eliminarProyecto = (id) => {
@@ -56,18 +47,5 @@ async function ListaProyectos() {
         </DataTable>
     </>
 }
-
-
-
-// const actionBodyTemplate = async (rowData) => {
-//     'use server';
-
-//     return (
-//         <React.Fragment>
-//             <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => modificarProyecto(rowData)} />
-//             <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => eliminarProyecto(rowData)} />
-//         </React.Fragment>
-//     );
-// };
 
 export default ListaProyectos;
