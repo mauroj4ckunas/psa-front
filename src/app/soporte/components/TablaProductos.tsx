@@ -10,6 +10,7 @@ import PanelCrearProducto from './PanelCrearProducto';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface Props {
   listaDeProductos: producto[],
@@ -46,15 +47,15 @@ function TablaProductos({ listaDeProductos }: Props) {
   const accionesProducto = (producto: producto) => {
       return <div className='w-3/4 flex justify-around items-center'>
         <div className=' bg-red-500 text-white rounded-md p-3 text-xl hover:bg-red-300 hover:text-slate-200 cursor-pointer' onClick={() => confirmarEliminar(producto)}><FaRegTrashAlt /></div>
-        <div className=' bg-slate-500 text-white rounded-md p-3 text-xl hover:bg-slate-300 hover:text-slate-500 cursor-pointer'><FaEye /></div>
+        <Link href={`/soporte/${producto.producto_id}`} className=' bg-slate-500 text-white rounded-md p-3 text-xl hover:bg-slate-300 hover:text-slate-500 cursor-pointer'><FaEye /></Link>
       </div>;
   };
 
   const [panel, setPanel] = useState<boolean>(false);
 
   const agregarProducto = (
-    <div className='w-full flex justify-end items-center' onClick={() => setPanel(true)}>
-      <button className='font-bold px-4 py-2 bg-blue-300 rounded-md hover:bg-blue-500'>Agregar Producto</button>
+    <div className='w-full flex justify-end items-center'>
+      <button className='font-bold px-4 py-2 bg-blue-300 rounded-md hover:bg-blue-500' onClick={() => setPanel(true)}>Agregar Producto</button>
     </div>
   );
 

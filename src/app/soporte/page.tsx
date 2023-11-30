@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react'
-import TablaTickets from './components/TablaTickets';
+import TablaTickets from './[producto_id]/components/TablaTickets';
 import TablaProductos from './components/TablaProductos';
 import { producto } from './models/producto';
 import { allProductos } from './services/productos/allProductos';
