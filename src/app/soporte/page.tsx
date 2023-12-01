@@ -25,9 +25,7 @@ async function Soporte() {
         <section className=' h-full w-full flex flex-col'>
             {
               'error' in listaDeProductos ? 
-              <div>
-                No hay productos actualmente
-              </div> :
+              <TablaProductos listaDeProductos={[]}/> :
               <TablaProductos listaDeProductos={listaDeProductos}/>
             }
         </section>

@@ -74,7 +74,7 @@ function TablaTickets({ listaDeTickets }: Props) {
         <Column field="descripcion" header="Descripcion"></Column>
         <Column header="" body={(row) => accionesTicket(row)}></Column>
     </DataTable>
-    <PanelCrearTicket visible={crearTicket} onHide={() => setCrearTicket(false)}/>
+    <PanelCrearTicket visible={crearTicket} onHide={() => setCrearTicket(false)} producto_id={6}/>
     <ConfirmDialog draggable={false}/>
     {verTicket && <DetalleTicket visible={panel} onHide={onHide} ticket={verTicket}/>}
     <Toast ref={toast} />

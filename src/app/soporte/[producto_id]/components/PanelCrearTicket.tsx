@@ -5,6 +5,7 @@ import React, { useRef, useState } from 'react'
 interface Props {
     visible: boolean,
     onHide: () => void,
+    producto_id: number,
 }
 
 const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`

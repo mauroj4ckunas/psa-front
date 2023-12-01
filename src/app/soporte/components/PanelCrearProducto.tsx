@@ -2,15 +2,17 @@
 import { Dialog } from 'primereact/dialog';
 import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { producto } from '../models/producto';
 
 interface Props {
   visible: boolean;
   onHide: () => void;
+  guardar: (nuevo: producto) => void;
 }
 
 const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 
-function PanelCrearProducto({ visible, onHide }: Props) {
+function PanelCrearProducto({ visible, onHide, guardar }: Props) {
   const [formData, setFormData] = useState({
     version: '',
     proyecto_id: 0,
@@ -39,10 +41,10 @@ function PanelCrearProducto({ visible, onHide }: Props) {
             proyecto_id: Number(formData.proyecto_id),
         })
     })
-        .then(response => {
-            if (response.ok) {
-                onHide();
-            }
+        .then(response => response.json())
+        .then(data => {
+          const nuevo: producto = data;
+          guardar(nuevo)
         })
   };
 

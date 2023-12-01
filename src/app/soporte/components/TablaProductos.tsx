@@ -22,13 +22,16 @@ function TablaProductos({ listaDeProductos }: Props) {
 
   const router = useRouter();
   const toast = useRef<Toast>(null);
+
+  const [productos, setProductos] = useState<producto[]>(listaDeProductos);
+
   const eliminar = (producto: producto) => {
     const url = `${url_base}/productos/${producto.producto_id}`
-    fetch(url)
+    fetch(url, { method: 'DELETE' })
         .then(response => {
             if (response.ok) {
               toast.current?.show({ severity: 'info', summary: 'Eliminación exitosa', detail: 'El producto fue eliminado.', life: 3000 });
-              router.refresh();
+              setProductos(productos.filter(prod => prod.producto_id !== producto.producto_id));
             }
         })
   }
@@ -59,14 +62,23 @@ function TablaProductos({ listaDeProductos }: Props) {
     </div>
   );
 
+  const onhide = () => {
+    setPanel(false);
+  }
+
+  const guardar = (prod: producto) => {
+    setPanel(false);
+    setProductos(lista => [...lista, prod])
+  }
+
   return <>
-      <DataTable value={listaDeProductos} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}  header={agregarProducto} tableStyle={{ minWidth: '50rem' }}>
+      <DataTable value={productos} emptyMessage={<div>No hay productos actualmente</div>} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}  header={agregarProducto} tableStyle={{ minWidth: '50rem' }}>
         <Column field="producto_id" header="Producto ID"></Column>
         <Column field="proyecto_id" header="Proyecto ID"></Column>
         <Column field="version" header="Versión"></Column>
         <Column header="" body={(row) => accionesProducto(row)}></Column>
       </DataTable>
-      <PanelCrearProducto visible={panel} onHide={() => setPanel(false)} />
+      <PanelCrearProducto visible={panel} onHide={onhide} guardar={guardar} />
       <ConfirmDialog draggable={false}/>
       <Toast ref={toast} />
     </>
