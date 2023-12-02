@@ -79,6 +79,6 @@ function TablaTickets({ listaDeTickets }: Props) {
     {verTicket && <DetalleTicket visible={panel} onHide={onHide} ticket={verTicket}/>}
     <Toast ref={toast} />
   </>
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 export default TablaTickets;
