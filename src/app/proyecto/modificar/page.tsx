@@ -30,9 +30,9 @@ async function ModificarProyecto() {
         </div>
         <div className='grid grid-cols-3'>
           <div className='font-bold'>Estado</div>
-          <div className='col-span-2'>{proyecto.estado.descripcion}</div>
+          <div className='col-span-2'>{proyecto.estado}</div>
           <div className='font-bold'>Líder de Proyecto</div>
-          <div className='col-span-2'>{proyecto.liderAsignadoId}</div>
+          <div className='col-span-2'>{proyecto.liderAsignado.nombre + " " + proyecto.liderAsignado.apellido}</div>
           <div className='font-bold'>Fecha Inicio</div>
           <div className='col-span-2'>{proyecto.fechaInicio}</div>
           <div className='font-bold'>Fecha Fin</div>
