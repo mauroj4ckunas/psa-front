@@ -2,26 +2,42 @@
 import { useSearchParams } from 'next/navigation'
 import KanbanColumn from './KanbanColumn';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-async function DetalleProyecto() {
+async function fetchProyecto(proyectoId) {
+  const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`);
+  if (!res.ok) {
+    throw new Error('Error al obtener proyecto');
+  }
+  const data = await res.json();
+  return data;
+}
+
+function DetalleProyecto() {
   const router = useRouter();
+  const [proyecto, setProyecto] = useState({});
+  const searchParams = useSearchParams();
+  const proyectoId = searchParams.get('id');
+
+  useEffect(() => {
+    const obtenerProyecto = async () => {
+      try {
+        const proyectoData = await fetchProyecto(proyectoId);
+        setProyecto(proyectoData);
+      } catch (error) {
+        console.error('Error al obtener proyecto:', error);
+      }
+    };
+
+    if (proyectoId) {
+      obtenerProyecto();
+    }
+  }, [proyectoId]);
 
   const volver = () => {
     // Navegar a la página de la lista de proyectos
     router.push('/proyecto');
   };
-  const searchParams = useSearchParams()
-
-  var proyectoId = searchParams.get('id');
-  var proyecto = {};
-  await fetch("http://localhost:8080/proyecto/" + proyectoId)
-    .then((res) => {
-      return res.json()
-    })
-    .then((data) => {
-      console.log(data)
-      proyecto = data;
-    })
 
 
   return (
@@ -33,13 +49,13 @@ async function DetalleProyecto() {
       <div className='grid grid-cols-2 gap-20 p-4 mb-6'>
         <div className='grid grid-cols-3'>
           <div className='font-bold'>Descripcion</div>
-          <textarea disabled className='col-span-2' rows="6">{proyecto.descripcion}</textarea>
+          <textarea disabled className='col-span-2' rows="6" value={proyecto.descripcion}></textarea>
         </div>
         <div className='grid grid-cols-3'>
           <div className='font-bold'>Estado</div>
           <div className='col-span-2'>{proyecto.estado}</div>
           <div className='font-bold'>Líder de Proyecto</div>
-          <div className='col-span-2'>{proyecto.liderAsignado.nombre + " " + proyecto.liderAsignado.apellido}</div>
+          <div className='col-span-2'>{proyecto.liderAsignado != null ? proyecto.liderAsignado.nombre + " " + proyecto.liderAsignado.apellido : null}</div>
           <div className='font-bold'>Fecha Inicio</div>
           <div className='col-span-2'>{proyecto.fechaInicio}</div>
           <div className='font-bold'>Fecha Fin</div>
@@ -53,7 +69,7 @@ async function DetalleProyecto() {
         ))}
       </div>
       <div className='text-right'>
-        <button type="button" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800" onClick={volver}>Volver</button>
+        <button type="button" className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800" onClick={volver}>Volver</button>
       </div>
     </>
   );
