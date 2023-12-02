@@ -25,3 +25,24 @@
     )
     rgb(var(--background-start-rgb));
 } */
+
+
+.border-nueva {
+  border-color: skyblue;
+}
+
+.border-en-curso {
+  border-color: orange;
+}
+
+.border-terminada {
+  border-color: green;
+}
+
+.border-en-espera {
+  border-color: red;
+}
+
+.border-default {
+  border-color: grey;
+}

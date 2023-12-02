@@ -1,5 +1,6 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
+import KanbanColumn from './KanbanColumn'; 
 
 async function ModificarProyecto() {
 
@@ -40,7 +41,11 @@ async function ModificarProyecto() {
         </div>
       </div>
       <hr />
-      {/* Agregar tareas */}
+      <div className='grid grid-cols-4 gap-4 p-4 mb-6'>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} />
+        ))}
+      </div>
     </>
   );
 
