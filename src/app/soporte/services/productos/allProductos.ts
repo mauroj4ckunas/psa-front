@@ -1,5 +1,5 @@
 import { badRequest } from "@/app/models/badRequest";
-import { producto } from "../../models/producto";
+import { producto } from "../../../models/producto";
 
 const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 

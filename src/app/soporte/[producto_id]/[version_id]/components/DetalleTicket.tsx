@@ -1,5 +1,5 @@
 import React from 'react'
-import { ticket } from '../../models/ticket'
+import { ticket } from '../../../../models/ticket'
 import { Dialog } from 'primereact/dialog'
 
 interface Props {

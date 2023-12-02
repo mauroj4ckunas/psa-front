@@ -1,6 +1,6 @@
 
 import { badRequest } from "@/app/models/badRequest";
-import { ticket } from "../../models/ticket";
+import { ticket } from "../../../../models/ticket";
 
 const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 

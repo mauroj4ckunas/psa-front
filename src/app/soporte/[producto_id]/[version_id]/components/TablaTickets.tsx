@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { ticket } from '../../models/ticket';
+import { ticket } from '../../../../models/ticket';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import { useRouter } from 'next/navigation';
@@ -27,7 +27,7 @@ function TablaTickets({ listaDeTickets }: Props) {
   const router = useRouter();
   const toast = useRef<Toast>(null);
   const eliminar = (ticket: ticket) => {
-    const url = `${url_base}/tickets/${ticket.ticket_id}`
+    const url = `${url_base}/tickets/${ticket.ticketId}`
     fetch(url)
         .then(response => {
             if (response.ok) {
