@@ -86,20 +86,30 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
         </div>;
     };
 
-    const agregarTicket = (nuevoTicket: ticket) => {
-        setTodosLosTickets(ticketsViejos => [nuevoTicket, ...ticketsViejos]);
+    const agregarTicket = (nuevoTicket: ticket | null) => {
+        if (nuevoTicket) {
+            setTodosLosTickets(ticketsViejos => [nuevoTicket, ...ticketsViejos]);
+            toast.current?.show({ severity: 'success', summary: 'Crear ticket', detail: `El ticket ${nuevoTicket.nombre} se creó correctamente`, life: 3000 });
+        } else {
+            toast.current?.show({ severity: 'error', summary: 'Crear ticket', detail: `Hubo un error en la creación del ticket`, life: 3000 });
+        }
         setPanelCrear(false);
     }
 
-    const editarTicket = (ticketEditado: ticket) => {
-        setTodosLosTickets(ticketsViejos => {
-            return ticketsViejos.map(t => {
-                if (t.ticketId === ticketEditado.ticketId) {
-                    return { ...ticketEditado };
-                }
-                return t;
-            });
-        })
+    const editarTicket = (ticketEditado: ticket | null) => {
+        if (ticketEditado) {
+            setTodosLosTickets(ticketsViejos => {
+                return ticketsViejos.map(t => {
+                    if (t.ticketId === ticketEditado.ticketId) {
+                        return { ...ticketEditado };
+                    }
+                    return t;
+                });
+            })
+            toast.current?.show({ severity: 'success', summary: 'Editar ticket', detail: `El ticket ${ticketEditado.nombre} se editó correctamente`, life: 3000 });
+        } else {
+            toast.current?.show({ severity: 'error', summary: 'Editar ticket', detail: `Hubo un error en la edición del ticket`, life: 3000 });
+        }
         setTicketAEditar(null);
         setPanelEditar(false);
     }

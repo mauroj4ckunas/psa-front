@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
@@ -12,11 +12,12 @@ import { allClientes } from '../../services/clientes/allClientes'
 import { allColaboradores } from '../../services/colaboradores/allColaboradores'
 import { cliente } from '@/app/models/cliente'
 import { colaborador } from '@/app/models/colaborador'
+import { Toast } from 'primereact/toast'
 
 interface Props {
     visible: boolean,
     productoId: number,
-    agregar: (nuevo: ticket) => void,
+    agregar: (nuevo: ticket | null) => void,
     cerrar: () => void,
 }
 
@@ -50,7 +51,9 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     const [descripcion, setDescripcion] = useState<string>('');
     const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
     const numbers = Array.from({ length: 5 }, (_, i) => ({ label: `${i + 1}`, value: i + 1 }));
+    const [botonDeshabilitado, setBotonDeshabilitado] = useState<boolean>(false);
 
+    const toast = useRef<Toast>(null);
 
     const vaciar = () => {
         setSelectedVersion(undefined)
@@ -67,8 +70,8 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
 
     useEffect(() => {
         fetchVersiones(productoId).then(data => !('error' in data) && setVersiones(data))
-        fetchClientes().then(data => {!('error' in data) && setClientes(data); console.log('cliente', data)})
-        fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data); console.log('colaborador', data)})
+        fetchClientes().then(data => {!('error' in data) && setClientes(data);})
+        fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data);})
     }, [])
 
     const prioridades = ['Alta', 'Media', 'Baja'];
@@ -78,6 +81,16 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedCliente || !selectedColaborador || selectedNumbers.length === 0) {
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Por favor, complete todos los campos requeridos',
+                life: 3000
+            });
+            return;
+        }
+        setBotonDeshabilitado(true);
         const ticketRequest = {
             nombre: nombre,
             descripcion: descripcion,
@@ -97,7 +110,8 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
             body: JSON.stringify(ticketRequest),
         })
             .then(res => res.json())
-            .then(data => {vaciar(); agregar(data)})
+            .then(data => {vaciar(); agregar(data); setBotonDeshabilitado(false);})
+            .catch(error => {vaciar(); agregar(null); setBotonDeshabilitado(false);});
     };
 
     const header = (
@@ -107,81 +121,84 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     )
 
     return (
-        <Dialog visible={visible} header={header} onHide={() => {vaciar(); cerrar();}} draggable={false} closeOnEscape={true}>
+        <>
+        <Dialog visible={visible} header={header} className=' w-3/4'
+                onHide={() => {vaciar(); cerrar();}} draggable={false} closeOnEscape={true}>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 p-4">
                 <InputText 
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     placeholder="Nombre del Ticket"
-                    required
                 />
                 <InputText 
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
                     placeholder="Descripción"
-                    required
                 />
                 <Dropdown 
                     value={prioridad} 
                     options={prioridades} 
                     onChange={(e) => setPrioridad(e.value)}
                     placeholder="Seleccione una prioridad"
-                    required
+                    
                 />
                 <Dropdown 
                     value={severidad} 
                     options={severidades} 
                     onChange={(e) => setSeveridad(e.value)}
                     placeholder="Seleccione una severidad"
-                    required
+                    
                 />
                 <Dropdown 
                     value={categoria} 
                     options={categorias} 
                     onChange={(e) => setCategoria(e.value)}
                     placeholder="Seleccione una categoría"
-                    required
+                    
                 />
                 <Dropdown 
                     value={estado} 
                     options={estados} 
                     onChange={(e) => setEstado(e.value)}
                     placeholder="Seleccione un estado"
-                    required
+                    
                 />
                 <Dropdown 
                     value={selectedVersion}
                     options={versiones.map(ver => ({ label: ver.version, value: ver.productoVersionId }))}
                     onChange={(e) => setSelectedVersion(e.value)}
                     placeholder="Seleccione una versión"
-                    required
+                    
                 />
                 <Dropdown 
                     value={selectedCliente}
                     options={clientes.map(cli => ({ label: cli.razonSocial, value: cli.clientId }))}
                     onChange={(e) => setSelectedCliente(e.value)}
                     placeholder="Seleccione cliente asignado"
-                    required
+                    
                 />
                 <Dropdown 
                     value={selectedColaborador}
                     options={colaboradores.map(col => ({ label: col.nombre, value: col.colaboradorId }))}
                     onChange={(e) => setSelectedColaborador(e.value)}
                     placeholder="Seleccione colaborador asignado"
-                    required
+                    
                 />
                 <MultiSelect
                     value={selectedNumbers}
                     options={numbers}
                     onChange={(e) => setSelectedNumbers(e.value)}
                     placeholder="Seleccione números"
-                    required
+                    
                 />
-                <Button type="submit" label="Guardar" 
+                <Button type="submit" label="Guardar"
+                    disabled={botonDeshabilitado}
                     className="mt-2 bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
                 />
             </form>
         </Dialog>
+        <Toast ref={toast} />
+        </>
     )
 }
 
