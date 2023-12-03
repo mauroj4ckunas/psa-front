@@ -16,8 +16,9 @@ import { colaborador } from '@/app/models/colaborador'
 interface Props {
     visible: boolean,
     productoId: number,
-    agregar: (nuevo: ticket) => void,
+    editar: (nuevo: ticket) => void,
     cerrar: () => void,
+    ticket: ticket,
 }
 
 function fetchVersiones(productoId: number) {
@@ -34,7 +35,7 @@ function fetchColaboradores() {
 
 const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 
-function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
+function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Props) {
 
     const [versiones, setVersiones] = useState<version[]>([]);
     const [clientes, setClientes] = useState<cliente[]>([]);
@@ -42,7 +43,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     const [selectedVersion, setSelectedVersion] = useState<number>();
     const [selectedCliente, setSelectedCliente] = useState<number>();
     const [selectedColaborador, setSelectedColaborador] = useState<number>();
-    const [prioridad, setPrioridad] = useState<string>('');
+    const [prioridad, setPrioridad] = useState<string>();
     const [severidad, setSeveridad] = useState<string>('');
     const [categoria, setCategoria] = useState<string>('');
     const [estado, setEstado] = useState<string>('');
@@ -52,14 +53,30 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     const numbers = Array.from({ length: 5 }, (_, i) => ({ label: `${i + 1}`, value: i + 1 }));
 
     useEffect(() => {
-        fetchVersiones(productoId).then(data => !('error' in data) && setVersiones(data))
+        fetchVersiones(productoId).then(data => {
+            if (!('error' in data)) {
+                setVersiones(data);
+                const versionesData: version[] = data;
+                versionesData.forEach(v => {
+                    if (v.version === ticket.versionNombre) setSelectedVersion(v.productoVersionId);
+                })
+            }
+        })
+        ticket.prioridad && setPrioridad(ticket.prioridad);
+        ticket.severidad && setSeveridad(ticket.severidad);
+        ticket.categoria && setCategoria(ticket.categoria);
+        ticket.estado && setEstado(ticket.estado);
+        ticket.nombre && setNombre(ticket.nombre);
+        ticket.descripcion && setDescripcion(ticket.descripcion);
+        ticket.tareaIds && setSelectedNumbers(ticket.tareaIds);
+        console.log(ticket)
         // fetchClientes().then(data => {!('error' in data) && setClientes(data); console.log('cliente', data)})
         // fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data); console.log('colaborador', data)})
     }, [productoId])
 
-    const prioridades = ['Alta', 'Media', 'Baja'];
+    const prioridades = ['ALTA', 'MEDIA', 'BAJA'];
     const severidades = ['S1', 'S2', 'S3', 'S4'];
-    const categorias = ['Proyecto', 'Soporte', 'Finanzas', 'IT'];
+    const categorias = ['PROYECTO', 'SOPORTE', 'FINANZAS', 'IT'];
     const estados = ['SIN_INICIAR', 'EN_PROGRESO', 'EN_DESARROLLO', 'EN_IMPLEMENTACION', 'ESPERANDO_AL_CLIENTE', 'BLOQUEADO', 'RESUELTO', 'CERRADO'];
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,15 +94,15 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
                 tareaId: selectedNumbers
             }
         };
-        fetch(`${url_base}/tickets/${selectedVersion}`, {
+        fetch(`${url_base}/tickets/${ticket.ticketId}`, {
             headers: {
                 'Content-Type': 'application/json'
             },
-            method: 'POST',
+            method: 'PUT',
             body: JSON.stringify(ticketRequest),
         })
             .then(res => res.json())
-            .then(data => agregar(data))
+            .then(data => editar(data))
     };
 
     const header = (
@@ -97,7 +114,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     return (
         <Dialog visible={visible} header={header} onHide={cerrar} draggable={false} closeOnEscape={true}>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 p-4">
-                <InputText 
+                <InputText
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     placeholder="Nombre del Ticket"
@@ -137,13 +154,13 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
                     placeholder="Seleccione un estado"
                     required
                 />
-                <Dropdown 
+                {/* <Dropdown 
                     value={selectedVersion}
                     options={versiones.map(ver => ({ label: ver.version, value: ver.productoVersionId }))}
                     onChange={(e) => setSelectedVersion(e.value)}
                     placeholder="Seleccione una versión"
                     required
-                />
+                /> */}
                 {/* <Dropdown 
                     value={selectedCliente}
                     options={clientes.map(cli => ({ label: cli.razonSocial, value: cli.clientId }))}
@@ -173,4 +190,4 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     )
 }
 
-export default PanelDetalleTicket
+export default PanelEditarTicket;

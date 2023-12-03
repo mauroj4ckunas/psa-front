@@ -1,4 +1,5 @@
 import { ticket } from '@/app/models/ticket'
+import { formatearFecha } from '@/app/utils/formatearFecha'
 import { Dialog } from 'primereact/dialog'
 import React from 'react'
 
@@ -54,7 +55,7 @@ function PanelDetalleTicket({ visible, onHide, ticket }: Props) {
           )}
           {ticket.createdAt && (
             <div>
-              <strong>Creado:</strong> {ticket.createdAt}
+              <strong>Creado:</strong> {formatearFecha(ticket.createdAt)}
             </div>
           )}
         </div>

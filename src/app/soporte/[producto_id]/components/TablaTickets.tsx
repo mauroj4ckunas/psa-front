@@ -5,14 +5,13 @@ import { Column } from 'primereact/column';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import { Toast } from 'primereact/toast';
-import { FaEye, FaTrashAlt } from 'react-icons/fa';
-import { version } from '@/app/models/version';
+import { FaEye, FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 import { formatearFecha } from '@/app/utils/formatearFecha';
-import Link from 'next/link';
 import { ticket } from '@/app/models/ticket';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import PanelDetalleTicket from './PanelDetalleTicket';
 import PanelCrearTicket from './PanelCrearTicket';
+import PanelEditarTicket from './PanelEditarTicket';
 
 interface Props {
     listaDeTickets: ticket[],
@@ -30,6 +29,9 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     const [verTicket, setVerTicket] = useState<ticket | null>(null);
 
     const [panelCrear, setPanelCrear] = useState<boolean>(false);
+
+    const [panelEditar, setPanelEditar] = useState<boolean>(false);
+    const [ticketAEditar, setTicketAEditar] = useState<ticket | null>(null);
 
     const aceptarEliminarTicket = (ticketAEliminar: ticket) => {
         const url = `${url_base}/tickets/${ticketAEliminar.ticketId}`
@@ -55,14 +57,28 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
 
     const accionesTickets = (ticket: ticket) => {
         return <div className='w-3/4 flex justify-around items-center'>
-            <div className=' bg-red-500 text-white rounded-md p-3 text-xl hover:bg-red-300 hover:text-black-500 cursor-pointer' onClick={() => eliminarTicket(ticket)}><FaTrashAlt /></div>
+            <div className=' bg-red-500 text-white rounded-md p-3 text-xl hover:bg-red-300 hover:text-black cursor-pointer' onClick={() => eliminarTicket(ticket)}><FaTrashAlt /></div>
             <div className=' bg-slate-500 text-white rounded-md p-3 text-xl hover:bg-slate-300 hover:text-slate-500 cursor-pointer' onClick={() => {setPanelDetalles(true); setVerTicket(ticket)}}><FaEye /></div>
+            <div className=' bg-green-500 text-white rounded-md p-3 text-xl hover:bg-green-300 hover:text-black cursor-pointer' onClick={() => {setPanelEditar(true); setTicketAEditar(ticket)}}><FaPencilAlt /></div>
         </div>;
     };
 
     const agregarTicket = (nuevoTicket: ticket) => {
         setTodosLosTickets(ticketsViejos => [nuevoTicket, ...ticketsViejos]);
         setPanelCrear(false);
+    }
+
+    const editarTicket = (ticketEditado: ticket) => {
+        setTodosLosTickets(ticketsViejos => {
+            return ticketsViejos.map(t => {
+                if (t.ticketId === ticketEditado.ticketId) {
+                    return { ...ticketEditado };
+                }
+                return t;
+            });
+        })
+        setTicketAEditar(null);
+        setPanelEditar(false);
     }
 
     const headerTablaTicket = (
@@ -75,7 +91,7 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
         </div>
     )
 
-    const onHide = () => {
+    const onHideDetalle = () => {
         setPanelDetalles(false);
         setVerTicket(null)
     }
@@ -90,8 +106,9 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     </DataTable>
     <ConfirmDialog />
     <Toast ref={toast} />
-    {verTicket && <PanelDetalleTicket visible={panelDetalles} onHide={onHide} ticket={verTicket} />}
-    <PanelCrearTicket visible={panelCrear} onHide={onHide} productoId={productoId} cerrar={() => setPanelCrear(false)} agregar={agregarTicket}/>
+    {verTicket && <PanelDetalleTicket visible={panelDetalles} onHide={onHideDetalle} ticket={verTicket} />}
+    <PanelCrearTicket visible={panelCrear} productoId={productoId} cerrar={() => setPanelCrear(false)} agregar={agregarTicket}/>
+    {ticketAEditar && <PanelEditarTicket visible={panelEditar} productoId={productoId} cerrar={() => {setPanelEditar(false); setTicketAEditar(null)}} editar={editarTicket} ticket={ticketAEditar}/>}
   </>
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
