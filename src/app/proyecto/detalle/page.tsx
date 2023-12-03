@@ -49,6 +49,9 @@ function DetalleProyecto() {
     router.push('/proyecto/modificar?id=' + id);
   };
 
+  const agregarTarea = async (proyectoId) => {
+    router.push('tarea/alta?proyectoId=' + proyectoId)
+  }
 
   return (
     <>
@@ -59,13 +62,13 @@ function DetalleProyecto() {
         // Muestra los datos cuando la carga ha terminado
         <>
           <div className='flex justify-between items-center'>
-    <div className='text-4xl p-4'>
-        {proyecto.nombre}
-    </div>
-    <Button onClick={async () => await modificarProyecto(proyecto.id)} className="me-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-    <FaRegEdit className="me-2" /> Editar
-    </Button>
-</div>
+            <div className='text-4xl p-4'>
+              {proyecto.nombre}
+            </div>
+            <Button onClick={async () => await modificarProyecto(proyecto.id)} className="me-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+              <FaRegEdit className="me-2" /> Editar
+            </Button>
+          </div>
 
           <hr />
           <div className='grid grid-cols-2 gap-20 p-4 mb-6'>
@@ -85,11 +88,22 @@ function DetalleProyecto() {
             </div>
           </div>
           <hr />
-          <div className='grid grid-cols-4 gap-4 p-4 mb-6'>
-            {Array.from({ length: 4 }).map((_, index) => (
-              <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} />
-            ))}
+          <div className='mt-4 text-right'>
+            <Button onClick={async () => await agregarTarea(proyecto.id)} className="me-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+              + Nueva Tarea
+            </Button>
           </div>
+          {proyecto.tareas && proyecto.tareas.length > 0 ? (
+            <div className='grid grid-cols-4 gap-4 p-4 mb-6'>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} />
+              ))}
+            </div>
+          ) : (
+            <div className=" text-center p-4 mb-4 text-m text-yellow-800 rounded-lg bg-yellow-50" role="alert">
+              Aún no existen tareas para este proyecto
+            </div>
+          )}
           <div className='text-right'>
             <button type="button" className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800" onClick={volver}>Volver</button>
           </div>

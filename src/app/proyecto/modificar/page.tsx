@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Spinner } from '@/app/util/spinner';
 import ErrorToast from '../components/errorToast';
 import SuccessToast from "../components/successToast"
+import { Button } from 'primereact/button';
 
 async function fetchProyecto(proyectoId) {
     const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`);
@@ -177,6 +178,10 @@ function ModificarProyecto() {
         router.push('/proyecto');
     };
 
+    const agregarTarea = async (proyectoId) => {
+        router.push('tarea/alta?proyectoId=' + proyectoId)
+      }
+
     const save = async () => {
         setLoading(true);
         setErrors({});
@@ -263,12 +268,22 @@ function ModificarProyecto() {
                             </div>
                         </div>
                     </div>
-                    <hr />
-                    <div className='grid grid-cols-4 gap-4 p-4 mb-6'>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                            <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} />
-                        ))}
+                    <div className='mt-4 text-right'>
+                        <Button onClick={async () => await agregarTarea(proyecto.id)} className="me-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                            + Nueva Tarea
+                        </Button>
                     </div>
+                    {proyecto.tareas && proyecto.tareas.length > 0 ? (
+                        <div className='grid grid-cols-4 gap-4 p-4 mb-6'>
+                            {Array.from({ length: 4 }).map((_, index) => (
+                                <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className=" text-center p-4 mb-4 text-m text-yellow-800 rounded-lg bg-yellow-50" role="alert">
+                            Aún no existen tareas para este proyecto
+                        </div>
+                    )}
                     <div className='text-right'>
                         <button type="button" className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-blue-700 rounded-lg me-2" onClick={save}>Aceptar</button>
                         <button type="button" className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800" onClick={volver}>Volver</button>
