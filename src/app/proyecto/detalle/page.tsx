@@ -77,7 +77,7 @@ function DetalleProyecto() {
               <div className='font-bold'>Estado</div>
               <div className='col-span-2'>{proyecto.estado}</div>
               <div className='font-bold'>Líder de Proyecto</div>
-              <div className='col-span-2'>{proyecto.liderAsignado != null ? proyecto.liderAsignado.nombre + " " + proyecto.liderAsignado.apellido : null}</div>
+              <div className='col-span-2'>{proyecto.liderAsignado != null ? proyecto.liderAsignado.nombre + " " + proyecto.liderAsignado.apellido : "-"}</div>
               <div className='font-bold'>Fecha Inicio</div>
               <div className='col-span-2'>{proyecto.fechaInicio}</div>
               <div className='font-bold'>Fecha Fin</div>
