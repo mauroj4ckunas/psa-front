@@ -42,6 +42,10 @@ function ListaProyectos() {
     const verDetalleProyecto = async (id) => {
       router.push('/proyecto/detalle?id=' + id);
     };
+
+    const modificarProyecto = async (id) => {
+        router.push('/proyecto/modificar?id=' + id);
+      };
   
     const eliminarProyecto = (id) => {
       alert(id);
@@ -51,7 +55,7 @@ function ListaProyectos() {
       return (
 
         <div className='w-3/4 flex justify-around items-center'>
-          <div className='p-3 text-xl hover:text-cyan-500 cursor-pointer' onClick={async () => await verDetalleProyecto(proyecto.id)}><FaRegEdit /></div>
+          <div className='p-3 text-xl hover:text-cyan-500 cursor-pointer' onClick={async () => await modificarProyecto(proyecto.id)}><FaRegEdit /></div>
           <div className='p-3 text-xl hover:text-red-500 cursor-pointer' onClick={() => eliminarProyecto(proyecto.id)}><FaRegTrashAlt /></div>
         </div>
       );
