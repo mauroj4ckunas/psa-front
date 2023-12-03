@@ -17,7 +17,7 @@ async function fetchProyecto(proyectoId) {
 }
 
 async function fetchProyectoEstados() {
-    const res = await fetch(`http://localhost:8080/proyecto/estados`);
+    const res = await fetch(`http://localhost:8080/proyecto/estado`);
     if (!res.ok) {
         throw new Error('Error al obtener estados de Proyecto');
     }
