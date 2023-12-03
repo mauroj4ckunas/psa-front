@@ -104,8 +104,8 @@ function ModificarProyecto() {
     useEffect(() => {
 
         const obtenerProyecto = async () => {
-            setLoading(true);
             try {
+                setLoading(true);
                 const proyectoData = await fetchProyecto(proyectoId);
                 setProyecto(proyectoData);
             } catch (error) {
@@ -114,10 +114,11 @@ function ModificarProyecto() {
                 setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
             }
         };
+        
 
         const obtenerProyectoEstados = async () => {
-            setLoading(true);
             try {
+                setLoading(true);
                 const proyectoEstados = await fetchProyectoEstados();
                 setproyectoEstados(proyectoEstados);
             } catch (error) {
@@ -128,8 +129,8 @@ function ModificarProyecto() {
         };
 
         const obtenerColaboradores = async () => {
-            setLoading(true);
             try {
+                setLoading(true);
                 const colaboradores = await fetchColaboradores();
                 setColaboradores(colaboradores);
             } catch (error) {
@@ -140,11 +141,11 @@ function ModificarProyecto() {
         };
 
         if (proyectoId) {
+            obtenerColaboradores();
+            obtenerProyectoEstados();
             obtenerProyecto();
         }
 
-        obtenerColaboradores();
-        obtenerProyectoEstados();
 
     }, [proyectoId]);
 
