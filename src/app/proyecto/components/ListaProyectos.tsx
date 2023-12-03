@@ -4,6 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import { Spinner } from '@/app/util/spinner';
 
 async function fetchProyectos() {
     try {
@@ -48,6 +49,7 @@ function ListaProyectos() {
   
     const accionesProyecto = (proyecto) => {
       return (
+
         <div className='w-3/4 flex justify-around items-center'>
           <div className='p-3 text-xl hover:text-cyan-500 cursor-pointer' onClick={async () => await verDetalleProyecto(proyecto.id)}><FaRegEdit /></div>
           <div className='p-3 text-xl hover:text-red-500 cursor-pointer' onClick={() => eliminarProyecto(proyecto.id)}><FaRegTrashAlt /></div>
@@ -58,7 +60,7 @@ function ListaProyectos() {
     return (
       <>
         {loading ? (
-          <p>Cargando...</p>
+          <Spinner />
         ) : proyectos.length > 0 ? (
           <DataTable value={proyectos} tableStyle={{ minWidth: '50rem' }}>
             <Column field="nombre" className="font-bold" header="Nombre" body={(row) => (

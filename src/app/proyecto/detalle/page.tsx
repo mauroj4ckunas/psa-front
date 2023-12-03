@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation'
 import KanbanColumn from './KanbanColumn';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Spinner } from '@/app/util/spinner';
 
 async function fetchProyecto(proyectoId) {
   const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`);
@@ -16,6 +17,7 @@ async function fetchProyecto(proyectoId) {
 function DetalleProyecto() {
   const router = useRouter();
   const [proyecto, setProyecto] = useState({});
+  const [loading, setLoading] = useState(true); // Agregamos estado para controlar la carga
   const searchParams = useSearchParams();
   const proyectoId = searchParams.get('id');
 
@@ -26,6 +28,8 @@ function DetalleProyecto() {
         setProyecto(proyectoData);
       } catch (error) {
         console.error('Error al obtener proyecto:', error);
+      } finally {
+        setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
       }
     };
 
@@ -42,6 +46,12 @@ function DetalleProyecto() {
 
   return (
     <>
+    {loading ? (
+        // Muestra el spinner mientras se cargan los datos
+        <Spinner />
+      ) : (
+        // Muestra los datos cuando la carga ha terminado
+        <>
       <div className='text-4xl p-4'>
         {proyecto.nombre}
       </div>
@@ -71,9 +81,9 @@ function DetalleProyecto() {
       <div className='text-right'>
         <button type="button" className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800" onClick={volver}>Volver</button>
       </div>
+      </>
+      )}
     </>
   );
-
 }
-
 export default DetalleProyecto;
