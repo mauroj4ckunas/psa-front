@@ -51,11 +51,25 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
     const numbers = Array.from({ length: 5 }, (_, i) => ({ label: `${i + 1}`, value: i + 1 }));
 
+
+    const vaciar = () => {
+        setSelectedVersion(undefined)
+        setSelectedCliente(undefined)
+        setSelectedColaborador(undefined)
+        setPrioridad('')
+        setSeveridad('')
+        setCategoria('')
+        setEstado('')
+        setNombre('')
+        setDescripcion('')
+        setSelectedNumbers([]);
+    }
+
     useEffect(() => {
         fetchVersiones(productoId).then(data => !('error' in data) && setVersiones(data))
-        // fetchClientes().then(data => {!('error' in data) && setClientes(data); console.log('cliente', data)})
-        // fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data); console.log('colaborador', data)})
-    }, [productoId])
+        fetchClientes().then(data => {!('error' in data) && setClientes(data); console.log('cliente', data)})
+        fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data); console.log('colaborador', data)})
+    }, [])
 
     const prioridades = ['Alta', 'Media', 'Baja'];
     const severidades = ['S1', 'S2', 'S3', 'S4'];
@@ -71,11 +85,9 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
             severidad: severidad,
             categoria: categoria,
             estado: estado,
-            clienteId: 1,
-            colaboradorId: 1,
-            tareaRequest: {
-                tareaId: selectedNumbers
-            }
+            clienteId: selectedCliente,
+            colaboradorId: selectedColaborador,
+            tareaIds: selectedNumbers,
         };
         fetch(`${url_base}/tickets/${selectedVersion}`, {
             headers: {
@@ -85,7 +97,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
             body: JSON.stringify(ticketRequest),
         })
             .then(res => res.json())
-            .then(data => agregar(data))
+            .then(data => {vaciar(); agregar(data)})
     };
 
     const header = (
@@ -95,7 +107,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     )
 
     return (
-        <Dialog visible={visible} header={header} onHide={cerrar} draggable={false} closeOnEscape={true}>
+        <Dialog visible={visible} header={header} onHide={() => {vaciar(); cerrar();}} draggable={false} closeOnEscape={true}>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 p-4">
                 <InputText 
                     value={nombre}
@@ -144,7 +156,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
                     placeholder="Seleccione una versión"
                     required
                 />
-                {/* <Dropdown 
+                <Dropdown 
                     value={selectedCliente}
                     options={clientes.map(cli => ({ label: cli.razonSocial, value: cli.clientId }))}
                     onChange={(e) => setSelectedCliente(e.value)}
@@ -157,7 +169,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
                     onChange={(e) => setSelectedColaborador(e.value)}
                     placeholder="Seleccione colaborador asignado"
                     required
-                /> */}
+                />
                 <MultiSelect
                     value={selectedNumbers}
                     options={numbers}

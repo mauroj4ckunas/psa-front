@@ -1,7 +1,7 @@
 'use client'
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import { Toast } from 'primereact/toast';
@@ -12,18 +12,41 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import PanelDetalleTicket from './PanelDetalleTicket';
 import PanelCrearTicket from './PanelCrearTicket';
 import PanelEditarTicket from './PanelEditarTicket';
+import { FilterMatchMode } from 'primereact/api';
+import { InputText } from 'primereact/inputtext';
+import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
+import { getVersiones } from '../services/getVersiones';
+import { version } from '@/app/models/version';
 
 interface Props {
     listaDeTickets: ticket[],
     productoId: number,
 }
 
+function fetchVersiones(productoId: number) {
+    return getVersiones(productoId)
+}
 const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
 
 function TablaTickets({ listaDeTickets, productoId }: Props) {
 
     const toast = useRef<Toast>(null);
+    const [nombreDeVersiones, setNombreDeVersiones] = useState<string[]>([]);
     const [todosLosTickets, setTodosLosTickets] = useState<ticket[]>(listaDeTickets);
+    const [busquedaId, setBusquedaId] = useState<string>('');
+
+    const ticketsFiltrados = busquedaId
+        ? todosLosTickets.filter(ticket => ticket.ticketId.toString().includes(busquedaId))
+        : todosLosTickets;
+
+    useEffect(() => {
+        fetchVersiones(productoId).then(data => {
+            if (!('error' in data)) {
+                const versiones: version[] = data;
+                setNombreDeVersiones(versiones.map(v => v.version));
+            }
+        })
+    }, [])
 
     const [panelDetalles, setPanelDetalles] = useState<boolean>(false);
     const [verTicket, setVerTicket] = useState<ticket | null>(null);
@@ -83,6 +106,13 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
 
     const headerTablaTicket = (
         <div className='w-full flex items-center justify-end'>
+            <input 
+                type="text" 
+                placeholder="Buscar por ID..." 
+                value={busquedaId}
+                onChange={(e) => setBusquedaId(e.target.value)}
+                className="p-2 border border-gray-300 rounded mx-4"
+            />
             <button className=' px-5 py-3 rounded-md bg-blue-400 font-semibold shadow-md hover:bg-blue-700 text-black'
                     onClick={() => setPanelCrear(true)}
             >
@@ -97,7 +127,9 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     }
 
   return <>
-    <DataTable value={todosLosTickets} header={headerTablaTicket} emptyMessage={"Sin Tickets actualmente"} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
+    <DataTable value={ticketsFiltrados} header={headerTablaTicket} emptyMessage={"Sin Tickets actualmente"} 
+               paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+    >
         <Column field="ticketId" header="Id"></Column>
         <Column field="nombre" header="Nombre del ticket"></Column>
         <Column field="versionNombre" header="Versión del Producto"></Column>

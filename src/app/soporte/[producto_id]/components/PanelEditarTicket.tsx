@@ -69,9 +69,10 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
         ticket.nombre && setNombre(ticket.nombre);
         ticket.descripcion && setDescripcion(ticket.descripcion);
         ticket.tareaIds && setSelectedNumbers(ticket.tareaIds);
-        console.log(ticket)
-        // fetchClientes().then(data => {!('error' in data) && setClientes(data); console.log('cliente', data)})
-        // fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data); console.log('colaborador', data)})
+        ticket.clienteId && setSelectedCliente(ticket.clienteId);
+        ticket.colaboradorId && setSelectedColaborador(ticket.colaboradorId);
+        fetchClientes().then(data => {!('error' in data) && setClientes(data)})
+        fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data)})
     }, [productoId])
 
     const prioridades = ['ALTA', 'MEDIA', 'BAJA'];
@@ -88,11 +89,9 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
             severidad: severidad,
             categoria: categoria,
             estado: estado,
-            clienteId: 1,
-            colaboradorId: 1,
-            tareaRequest: {
-                tareaId: selectedNumbers
-            }
+            clienteId: selectedCliente,
+            colaboradorId: selectedColaborador,
+            tareaIds: selectedNumbers
         };
         fetch(`${url_base}/tickets/${ticket.ticketId}`, {
             headers: {
@@ -107,7 +106,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
 
     const header = (
         <div className='font-semibold text-lg underline underline-offset-2'>
-            Crear un nuevo ticket
+            Editar ticket
         </div>
     )
 
@@ -161,7 +160,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
                     placeholder="Seleccione una versión"
                     required
                 /> */}
-                {/* <Dropdown 
+                <Dropdown 
                     value={selectedCliente}
                     options={clientes.map(cli => ({ label: cli.razonSocial, value: cli.clientId }))}
                     onChange={(e) => setSelectedCliente(e.value)}
@@ -174,7 +173,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
                     onChange={(e) => setSelectedColaborador(e.value)}
                     placeholder="Seleccione colaborador asignado"
                     required
-                /> */}
+                />
                 <MultiSelect
                     value={selectedNumbers}
                     options={numbers}
