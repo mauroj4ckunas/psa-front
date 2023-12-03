@@ -42,20 +42,27 @@ async function saveProyecto(proyecto) {
         },
         body: JSON.stringify(proyecto)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al actualizar Proyecto');
-        }
-        response.json()
-        alert("ok")
-    } )
-    .then(json => response = json )
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al actualizar Proyecto');
+            }
+            response.json()
+            alert("ok")
+        })
+        .then(json => response = json)
     return response;
 }
 
 function ModificarProyecto() {
     const router = useRouter();
-    const [proyecto, setProyecto] = useState({});
+    const [proyecto, setProyecto] = useState({
+        nombre: '',
+        descripcion: '',
+        estadoIdm: 0,
+        liderAsignado: null,
+        fechaInicio: '',
+        fechaFin: '',
+    });
     const [proyectoEstados, setproyectoEstados] = useState([]);
     const [colaboradores, setColaboradores] = useState([]);
     const [loading, setLoading] = useState(true); // Agregamos estado para controlar la carga
@@ -114,7 +121,7 @@ function ModificarProyecto() {
                 setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
             }
         };
-        
+
 
         const obtenerProyectoEstados = async () => {
             try {
