@@ -21,7 +21,7 @@ export default function RootLayout({
         <header className=' w-full mb-10 flex justify-around text-black font-bold'>
           <Link href={'/'}>PSA</Link>
           <Link href={'/soporte'}>Soporte</Link>
-          <div>Proyecto</div>
+          <Link href={'/proyecto'}>Proyecto</Link>
         </header>
         {children}
       </body>
