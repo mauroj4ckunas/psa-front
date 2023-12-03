@@ -1,16 +1,16 @@
 
 export type ticket = {
     ticketId: number;
-    productoVersionId: number;
-    nombre: string;
-    descripcion: string;
-    prioridad: string;
-    severidad: string;
-    categoria: string;
-    estado: string;
-    clienteId: number;
-    colaboradorId: number;
-    createdAt: string; // o Date si prefieres manejarlo como objeto Date
-    updatedAt: string; // o Date si prefieres manejarlo como objeto Date
-    tareaIds: number[];
+    versionNombre: string | null;
+    nombre: string | null;
+    descripcion: string | null;
+    prioridad: string | null;
+    severidad: string | null;
+    categoria: string | null;
+    estado: string | null;
+    clienteId: number | null;
+    colaboradorId: number | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+    tareaIds: number[] | null;
 }
