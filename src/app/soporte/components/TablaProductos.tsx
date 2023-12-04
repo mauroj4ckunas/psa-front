@@ -1,57 +1,36 @@
-import React from 'react';
+'use client'
+import React, {  } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
+import { producto } from '../../models/producto';
+import { FaEye } from "react-icons/fa";
+import { ConfirmDialog } from 'primereact/confirmdialog';
 import Link from 'next/link';
-import { producto } from '../models/producto';
-import DetallesProducto from './DetalleProducto';
 
-function generarProductoAleatorio(): producto {
-  const producto: producto = {
-    producto_id: Math.floor(Math.random() * 1000), // Genera un ID aleatorio
-    proyecto_id: Math.floor(Math.random() * 100), // Genera un ID de proyecto aleatorio
-    version: `v${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`, // Genera una versión aleatoria
-    ticket_ids: Array.from({ length: Math.floor(Math.random() * 5) }, () => Math.floor(Math.random() * 100)), // Genera IDs de tickets aleatorios
-    client_ids: Array.from({ length: Math.floor(Math.random() * 3) }, () => Math.floor(Math.random() * 50)), // Genera IDs de clientes aleatorios
-    createdAt: new Date(), // Fecha actual como ejemplo (puede ser null si se desea)
-    updatedAt: null, // Puede ser null si se desea
+interface Props {
+  listaDeProductos: producto[],
+}
+
+const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+
+function TablaProductos({ listaDeProductos }: Props) {
+
+  const accionesProducto = (producto: producto) => {
+      return <div className='flex justify-center items-center'>
+        <Link href={`/soporte/${producto.productoId}`} className=' bg-slate-500 text-white rounded-md p-3 text-xl hover:bg-slate-300 hover:text-slate-500 cursor-pointer'><FaEye /></Link>
+      </div>;
   };
-  return producto;
-}
-
-function DetallesButton({ id }: { id: number }) {
-  return (
-    <Link href={`/producto/${id}`}>
-      <a>Ver más</a>
-    </Link>
-  );
-}
-
-function DetallesCell(props: any) {
-  const { rowData } = props;
-  return <DetallesButton id={rowData.producto_id} />;
-}
-
-
-function TablaProductos() {
-
-  const listaDeProductos: producto[] = [];
-
-  for (let i = 0; i < 10; i++) {
-    const nuevoProducto = generarProductoAleatorio();
-    listaDeProductos.push(nuevoProducto);
-  }
 
   return <>
-    <DataTable value={listaDeProductos} tableStyle={{ minWidth: '50rem' }}>
-      <Column field="producto_id" header="Producto ID"></Column>
-      <Column field="proyecto_id" header="Proyecto ID"></Column>
-      <Column field="version" header="Versión"></Column>
-      <Column field="ticket_ids" header="Tickets"></Column>
-      <Column field="client_ids" header="Clientes"></Column>
-    </DataTable>
-  </>
+      <DataTable value={listaDeProductos} emptyMessage={<div>No hay productos actualmente</div>} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}  tableStyle={{ minWidth: '50rem' }}>
+        <Column field="productoId" header="ID"></Column>
+        <Column field="nombre" header="Nombre del Producto"></Column>
+        <Column header="" body={(row) => accionesProducto(row)}></Column>
+      </DataTable>
+      <ConfirmDialog draggable={false}/>
+    </>
 }
 
 export default TablaProductos;
