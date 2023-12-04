@@ -78,7 +78,10 @@ function PanelDetalleTicket({ visible, onHide, ticket }: Props) {
                       <strong>{t.tareaId} - </strong> {t.descripcion}
                     </div>
                   }) :
-                  <strong>Sin tareas asociadas </strong>
+                  <>
+                    <br />
+                    <p>Sin tareas asociadas </p>
+                  </>
                 }
                 </div>
               }
