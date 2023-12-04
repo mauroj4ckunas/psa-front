@@ -7,6 +7,15 @@ import ErrorToast from '../../components/errorToast';
 import SuccessToast from "../../components/successToast"
 import { FaInfoCircle } from 'react-icons/fa';
 
+async function fetchTickets() {
+    const res = await fetch(`https://deploy-java-17.onrender.com/soporte/tickets`);
+    if (!res.ok) {
+        throw new Error('Error al obtener Tickets');
+    }
+    const data = await res.json();
+    return data;
+}
+
 async function fetchTareaEstados() {
     const res = await fetch(`https://api-proyectos-wp7y.onrender.com/tarea/estados`);
     if (!res.ok) {
@@ -70,6 +79,7 @@ function AltaTarea() {
         colaboradorAsignadoId: null,
         ticketIds: [] // SI PERMITIMOS ASOCIAR EN EL ALTA 
     });
+    const [tickets, setTickets] = useState([]);
     const [tareaEstados, setTareaEstados] = useState([]);
     const [colaboradores, setColaboradores] = useState([]);
     const [loading, setLoading] = useState(true); // Agregamos estado para controlar la carga
@@ -120,6 +130,18 @@ function AltaTarea() {
 
     useEffect(() => {
 
+        const obtenerTickets = async () => {
+            try {
+                setLoading(true);
+                const tickets = await fetchTickets();
+                setTickets(tickets);
+            } catch (error) {
+                console.error('Error al obtener Tickets:', error);
+            } finally {
+                setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
+            }
+        };
+
         const obtenerTareaEstados = async () => {
             try {
                 setLoading(true);
@@ -146,6 +168,7 @@ function AltaTarea() {
 
         obtenerColaboradores();
         obtenerTareaEstados();
+        obtenerTickets();
 
 
     }, []);
@@ -260,10 +283,11 @@ function AltaTarea() {
                                 value={tarea.ticketIds}
                                 onChange={handleTicketIdsChange}
                             >
-                                <option value="1">#1 DESCRIPCION TICKET 1</option>
-                                <option value="2">#2 DESCRIPCION TICKET 2</option>
-                                <option value="3">#3 DESCRIPCION TICKET 3</option>
-                                <option value="4">#4 DESCRIPCION TICKET 4</option>
+                                {tickets.map((ticket) => (
+                                    <option key={ticket.ticketId} value={ticket.ticketId}>
+                                        {"#" + ticket.ticketId + " " + ticket.nombre + " (" + (ticket.descripcion.length > 50 ? ticket.descripcion.slice(0, 50) + '...' : ticket.descripcion) + ")"}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
