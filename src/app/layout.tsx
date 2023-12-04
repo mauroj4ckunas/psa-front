@@ -27,8 +27,10 @@ export default function RootLayout({
               </div>
           </nav>
         </header>
-        <div className='h-fit'>
-            {children}
+        <div className='bg-gradient-to-t from-indigo-500 h-screen'>
+            <div className='flex flex-col bg-white divide-y-2 rounded-xl my-5 h-screen'>
+                {children}
+            </div>
         </div>
 
         <footer className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left" style={{position: 'fixed', left: 0, right: 0, bottom: 0}}>

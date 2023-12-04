@@ -179,17 +179,17 @@ function AltaProyecto() {
       ) : (
         // Muestra los datos cuando la carga ha terminado
         <>
-          <h4 className="text-3xl font-bold ms-4">Nuevo Proyecto</h4>
+          <h4 className="text-3xl font-bold ms-4 mt-5">Nuevo Proyecto</h4>
 
           <div className='text-4xl p-4'>
-            <input placeholder='Ingrese Nombre del Proyecto' type="text" onChange={handleNombreChange} className="border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" value={proyecto.nombre} />
+            <input placeholder='Ingrese Nombre del Proyecto' type="text" onChange={handleNombreChange} className="border-2 border-gray-200 rounded-xl w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" value={proyecto.nombre} />
             <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errors.nombre}</p>
           </div>
           <hr />
-          <div className='grid grid-cols-2 gap-20 p-4 mb-6'>
+          <div className='grid grid-cols-2 gap-20 p-4 mb-6 bg-gray-200 mx-4 rounded-xl'>
             <div className='grid grid-cols-3'>
               <div className='font-bold'>Descripción</div>
-              <textarea placeholder='Ingrese Descripción del Proyecto' onChange={handleDescripcionChange} className="col-span-2 border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" rows="6" value={proyecto.descripcion}></textarea>
+              <textarea placeholder='Ingrese Descripción del Proyecto' onChange={handleDescripcionChange} className="col-span-2 border-2 border-gray-200 rounded-xl w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" rows="6" value={proyecto.descripcion}></textarea>
               <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errors.descripcion}</p>
             </div>
             <div className='grid grid-cols-3'>
@@ -239,7 +239,7 @@ function AltaProyecto() {
               </div>
             </div>
           </div>
-          <div className='text-right'>
+          <div className='text-right pt-4'>
             <button type="button" className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-blue-700 rounded-lg me-2" onClick={save}>Aceptar</button>
             <button type="button" className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800" onClick={volver}>Volver</button>
           </div>
