@@ -18,10 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className=' w-full mb-10 flex justify-around text-black font-bold'>
+        <header className=' w-full h-20 mb-10 flex justify-around items-center text-black font-bold'>
           <Link href={'/'}>PSA</Link>
           <Link href={'/soporte'}>Soporte</Link>
-          <div>Proyecto</div>
+          <Link href={'/proyecto'}>Proyecto</Link>
         </header>
         {children}
       </body>

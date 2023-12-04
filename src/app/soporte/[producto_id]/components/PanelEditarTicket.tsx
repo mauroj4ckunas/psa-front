@@ -116,7 +116,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
         })
             .then(res => res.json())
             .then(data => {editar(data); setBotonDeshabilitado(false);})
-            .then(error => {editar(null); setBotonDeshabilitado(false);});
+            .catch(error => {editar(null); setBotonDeshabilitado(false);});
     };
 
     const header = (

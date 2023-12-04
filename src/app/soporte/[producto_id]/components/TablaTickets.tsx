@@ -143,6 +143,8 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
         <Column field="ticketId" header="Id"></Column>
         <Column field="nombre" header="Nombre del ticket"></Column>
         <Column field="versionNombre" header="Versión del Producto"></Column>
+        <Column field="estado" header="Estado del Ticket"></Column>
+        <Column field="prioridad" header="Prioridad del Ticket"></Column>
         <Column body={(row) => formatearFecha(row.createdAt)} header="Fecha de Creación"></Column>
         <Column header="" body={(row) => accionesTickets(row)}></Column>
     </DataTable>
