@@ -18,12 +18,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className=' w-full h-20 mb-10 flex justify-around items-center text-black font-bold'>
-          <Link href={'/'}>PSA</Link>
-          <Link href={'/soporte'}>Soporte</Link>
-          <Link href={'/proyecto'}>Proyecto</Link>
+        <header className=' w-full flex justify-around text-black font-bold'>
+        <nav className="font-sans flex flex-col text-center sm:flex-row sm:text-left sm:justify-between py-4 px-6 bg-gray-300 shadow sm:items-baseline w-full">
+            <div className="mb-2 sm:mb-0">
+                <a href={'/'} className="text-2xl no-underline text-grey-darkest hover:text-blue-dark">PSA</a>
+                <a href={'/soporte'} className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2">Soporte</a>
+                <a href={'/proyecto'} className="text-lg no-underline text-grey-darkest hover:text-blue-dark ml-2">Proyectos</a>
+            </div>
+        </nav>
         </header>
-        {children}
+        <div className='h-fit'>
+            {children}
+        </div>
+
+        <footer className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left" style={{position: 'absolute', left: 0, right: 0, bottom: 0}}>
+            <div className="p-4 text-center text-neutral-700 dark:text-neutral-200">
+            © 2023 Copyright: PSA
+            </div>
+        </footer>
       </body>
     </html>
   )
