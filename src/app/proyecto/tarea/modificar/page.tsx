@@ -175,7 +175,7 @@ function ModificarTarea() {
 
     const volver = () => {
         // Navegar a la página de la lista de proyectos
-        router.push('/proyecto');
+        router.push(`/proyecto/tarea/detalle?proyectoId=${proyectoId}&tareaId=${tareaId}`);
     };
 
     const save = async () => {
