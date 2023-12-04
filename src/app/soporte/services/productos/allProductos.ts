@@ -1,7 +1,7 @@
 import { badRequest } from "@/app/models/badRequest";
 import { producto } from "../../../models/producto";
 
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 export async function allProductos(): Promise<producto[] | badRequest> {
     const url = `${url_base}/productos`

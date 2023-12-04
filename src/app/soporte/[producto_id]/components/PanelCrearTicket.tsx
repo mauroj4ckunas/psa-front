@@ -34,7 +34,7 @@ function fetchColaboradores() {
     return allColaboradores()
 }
 
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
 

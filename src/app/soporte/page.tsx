@@ -15,7 +15,12 @@ async function Soporte() {
   const listaDeProductos = await getAllProductos();
 
   return <>
-    <main className='flex min-h-screen flex-col items-center p-16'>
+    <main className='flex flex-col items-center p-16"'>
+        <header className="w-full h-[20%] flex flex-grow justify-between text-black font-bold mb-4">
+              <div className='text-4xl'>
+                Listado de Productos
+              </div>
+        </header>
         <section className=' h-full w-full flex flex-col'>
             {
               'error' in listaDeProductos ? 
