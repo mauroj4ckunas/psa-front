@@ -115,7 +115,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
             colaboradorId: selectedColaborador,
             tareaIds: selectedTareas
         };
-        fetch(`${url_base}/tickets/${ticket.ticketId}`, {
+        fetch(`https://deploy-java-17.onrender.com/soporte/tickets/${ticket.ticketId}`, {
             headers: {
                 'Content-Type': 'application/json'
             },

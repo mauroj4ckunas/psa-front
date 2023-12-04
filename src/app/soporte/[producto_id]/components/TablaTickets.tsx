@@ -57,7 +57,7 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     const [ticketAEditar, setTicketAEditar] = useState<ticket | null>(null);
 
     const aceptarEliminarTicket = (ticketAEliminar: ticket) => {
-        const url = `${url_base}/tickets/${ticketAEliminar.ticketId}`
+        const url = `https://deploy-java-17.onrender.com/soporte/tickets/${ticketAEliminar.ticketId}`
         fetch(url, {method: 'DELETE'})
             .then(response => {
                 if(response.ok) {

@@ -110,7 +110,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
             colaboradorId: selectedColaborador,
             tareaIds: selectedTareas,
         };
-        fetch(`${url_base}/tickets/${selectedVersion}`, {
+        fetch(`https://deploy-java-17.onrender.com/soporte/tickets/${selectedVersion}`, {
             headers: {
                 'Content-Type': 'application/json'
             },
