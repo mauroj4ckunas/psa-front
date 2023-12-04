@@ -82,7 +82,7 @@ function DetalleTarea() {
     };
 
     const modificarTarea = async () => {
-        router.push('/proyecto/tarea/modificar?id=' + tareaId);
+        router.push(`/proyecto/tarea/modificar?proyectoId=${proyectoId}&tareaId=${tareaId}`);
     };
 
     const eliminarTarea = () => {
