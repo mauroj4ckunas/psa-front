@@ -13,7 +13,7 @@ interface Props {
   listaDeProductos: producto[],
 }
 
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function TablaProductos({ listaDeProductos }: Props) {
 

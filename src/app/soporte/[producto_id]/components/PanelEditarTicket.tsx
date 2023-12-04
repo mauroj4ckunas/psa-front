@@ -34,7 +34,7 @@ function fetchColaboradores() {
     return allColaboradores()
 }
 
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Props) {
 
@@ -116,7 +116,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
         })
             .then(res => res.json())
             .then(data => {editar(data); setBotonDeshabilitado(false);})
-            .then(error => {editar(null); setBotonDeshabilitado(false);});
+            .catch(error => {editar(null); setBotonDeshabilitado(false);});
     };
 
     const header = (

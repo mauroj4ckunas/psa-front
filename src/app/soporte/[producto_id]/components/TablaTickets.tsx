@@ -26,7 +26,7 @@ interface Props {
 function fetchVersiones(productoId: number) {
     return getVersiones(productoId)
 }
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function TablaTickets({ listaDeTickets, productoId }: Props) {
 
@@ -114,35 +114,40 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
         setPanelEditar(false);
     }
 
-    const headerTablaTicket = (
-        <div className='w-full flex items-center justify-end'>
-            <input 
-                type="text" 
-                placeholder="Buscar por ID..." 
-                value={busquedaId}
-                onChange={(e) => setBusquedaId(e.target.value)}
-                className="p-2 border border-gray-300 rounded mx-4"
-            />
-            <button className=' px-5 py-3 rounded-md bg-blue-400 font-semibold shadow-md hover:bg-blue-700 text-black'
-                    onClick={() => setPanelCrear(true)}
-            >
-                Crear Ticket
-            </button>
-        </div>
-    )
-
     const onHideDetalle = () => {
         setPanelDetalles(false);
         setVerTicket(null)
     }
 
   return <>
-    <DataTable value={ticketsFiltrados} header={headerTablaTicket} emptyMessage={"Sin Tickets actualmente"} 
+    <header className="w-full flex flex-grow justify-between text-black font-bold mb-4">
+            <div className='text-4xl'>
+              Listado de Tickets
+            </div>
+            <div className=''>
+                <input 
+                    type="text" 
+                    placeholder="Buscar por ID..." 
+                    value={busquedaId}
+                    onChange={(e) => setBusquedaId(e.target.value)}
+                    className="p-2 border border-gray-300 rounded mx-4"
+                />
+                <button className=' bg-transparent transition duration-100 hover:shadow-xl hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'
+                        onClick={() => setPanelCrear(true)}
+                >
+                    Crear Ticket
+                </button>
+            </div>
+    </header>
+    <DataTable value={ticketsFiltrados} emptyMessage={"Sin Tickets actualmente"} 
                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+               className=' shadow-md rounded-sm'
     >
         <Column field="ticketId" header="Id"></Column>
         <Column field="nombre" header="Nombre del ticket"></Column>
         <Column field="versionNombre" header="Versión del Producto"></Column>
+        <Column field="estado" header="Estado del Ticket"></Column>
+        <Column field="prioridad" header="Prioridad del Ticket"></Column>
         <Column body={(row) => formatearFecha(row.createdAt)} header="Fecha de Creación"></Column>
         <Column header="" body={(row) => accionesTickets(row)}></Column>
     </DataTable>

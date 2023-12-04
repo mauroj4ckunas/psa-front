@@ -9,7 +9,7 @@ import SuccessToast from "../components/successToast"
 import { Button } from 'primereact/button';
 
 async function fetchProyecto(proyectoId) {
-    const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}`);
     if (!res.ok) {
         throw new Error('Error al obtener proyecto');
     }
@@ -27,7 +27,7 @@ async function fetchProyectoEstados() {
 }
 
 async function fetchColaboradores() {
-    const res = await fetch(`http://localhost:8080/colaborador`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/colaborador`);
     if (!res.ok) {
         throw new Error('Error al obtener Colaboradores');
     }
@@ -40,7 +40,7 @@ async function saveProyecto(proyecto) {
         httpOk: true,
         body: {}
     };
-    await fetch(`http://localhost:8080/proyecto/${proyecto.id}`, {
+    await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyecto.id}`, {
         method: "PUT",
         mode: "cors",
         headers: {

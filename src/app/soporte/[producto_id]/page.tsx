@@ -7,7 +7,7 @@ async function Producto({ params }: { params: { producto_id: string } }) {
   const listaDeTickets = await getTicketProducto(Number(params.producto_id));
   
   return <>
-  <main className='flex min-h-screen flex-col items-center p-16'>
+  <main className='min-h-full h-full items-center px-5 py-5 bg-gray-300 m-5 rounded-xl divide-y-2'>
       <section className=' h-full w-full flex flex-col'>
           {
             'error' in listaDeTickets ? 
