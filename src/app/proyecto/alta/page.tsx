@@ -6,7 +6,7 @@ import ErrorToast from '../components/errorToast';
 import SuccessToast from "../components/successToast"
 
 async function fetchProyectoEstados() {
-  const res = await fetch(`http://localhost:8080/proyecto/estado`);
+  const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/estado`);
   if (!res.ok) {
     throw new Error('Error al obtener estados de Proyecto');
   }
@@ -15,7 +15,7 @@ async function fetchProyectoEstados() {
 }
 
 async function fetchColaboradores() {
-  const res = await fetch(`http://localhost:8080/colaborador`);
+  const res = await fetch(`https://api-proyectos-wp7y.onrender.com/colaborador`);
   if (!res.ok) {
     throw new Error('Error al obtener Colaboradores');
   }
@@ -28,7 +28,7 @@ async function saveProyecto(proyecto) {
     httpOk: true,
     body: {}
   };
-  await fetch(`http://localhost:8080/proyecto`, {
+  await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto`, {
     method: "POST",
     mode: "cors",
     headers: {

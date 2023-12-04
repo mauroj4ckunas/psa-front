@@ -7,8 +7,17 @@ import ErrorToast from '../../components/errorToast';
 import SuccessToast from "../../components/successToast";
 import { FaInfoCircle } from 'react-icons/fa';
 
+async function fetchTickets() {
+    const res = await fetch(`https://deploy-java-17.onrender.com/soporte/tickets`);
+    if (!res.ok) {
+        throw new Error('Error al obtener Tickets');
+    }
+    const data = await res.json();
+    return data;
+}
+
 async function fetchTarea(proyectoId, tareaId) {
-    const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tareaId}`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tareaId}`);
     if (!res.ok) {
         throw new Error('Error al obtener tarea');
     }
@@ -17,7 +26,7 @@ async function fetchTarea(proyectoId, tareaId) {
 }
 
 async function fetchTareaEstados() {
-    const res = await fetch(`http://localhost:8080/tarea/estados`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/tarea/estados`);
     if (!res.ok) {
         throw new Error('Error al obtener estados de Tarea');
     }
@@ -26,7 +35,7 @@ async function fetchTareaEstados() {
 }
 
 async function fetchColaboradores() {
-    const res = await fetch(`http://localhost:8080/colaborador`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/colaborador`);
     if (!res.ok) {
         throw new Error('Error al obtener Colaboradores');
     }
@@ -39,7 +48,7 @@ async function saveTarea(proyectoId, tarea) {
         httpOk: true,
         body: {}
     };
-    await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tarea.id}`, {
+    await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tarea.id}`, {
         method: "PUT",
         mode: "cors",
         headers: {
@@ -80,6 +89,7 @@ function ModificarTarea() {
     });
     const [tareaEstados, setTareaEstados] = useState([]);
     const [colaboradores, setColaboradores] = useState([]);
+    const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true); // Agregamos estado para controlar la carga
     const [showSuccessToast, setShowSuccessToast] = useState(false);
     const [showErrorToast, setShowErrorToast] = useState(false);
@@ -128,12 +138,23 @@ function ModificarTarea() {
     };
 
     useEffect(() => {
-
+        const obtenerTickets = async () => {
+            try {
+                setLoading(true);
+                const tickets = await fetchTickets();
+                setTickets(tickets);
+            } catch (error) {
+                console.error('Error al obtener Tickets:', error);
+            } finally {
+                setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
+            }
+        };
         const obtenerTarea = async () => {
             try {
                 setLoading(true);
                 const tareaData = await fetchTarea(proyectoId, tareaId);
                 setTarea(tareaData);
+                await obtenerTickets();
             } catch (error) {
                 console.error('Error al obtener tarea:', error);
             } finally {
@@ -169,6 +190,7 @@ function ModificarTarea() {
             obtenerColaboradores();
             obtenerTareaEstados();
             obtenerTarea();
+            // obtenerTickets();
         }
 
 
@@ -285,10 +307,11 @@ function ModificarTarea() {
                                 value={tarea.ticketIds}
                                 onChange={handleTicketIdsChange}
                             >
-                                <option value="1">#1 DESCRIPCION TICKET 1</option>
-                                <option value="2">#2 DESCRIPCION TICKET 2</option>
-                                <option value="3">#3 DESCRIPCION TICKET 3</option>
-                                <option value="4">#4 DESCRIPCION TICKET 4</option>
+                                {tickets.map((ticket) => (
+                                    <option key={ticket.ticketId} value={ticket.ticketId}>
+                                        {"#" + ticket.ticketId + " " + ticket.nombre + " (" + (ticket.descripcion.length > 50 ? ticket.descripcion.slice(0, 50) + '...' : ticket.descripcion) + ")"}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>

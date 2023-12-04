@@ -9,20 +9,27 @@ import ConfirmarBajaModal from '../../components/confirmarBajaModal';
 import SuccessToast from '../../components/successToast';
 import ErrorToast from '../../components/errorToast';
 
+async function fetchTickets() {
+    const res = await fetch(`https://deploy-java-17.onrender.com/soporte/tickets`);
+    if (!res.ok) {
+        throw new Error('Error al obtener Tickets');
+    }
+    const data = await res.json();
+    return data;
+}
+
 async function fetchTarea(proyectoId, tareaId) {
-    const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tareaId}`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tareaId}`);
     if (!res.ok) {
         throw new Error('Error al obtener tarea');
     }
     const data = await res.json();
-    console.log(data)
-
     return data;
 }
 
 const eliminarTareaConfirmed = async (proyectoId, tareaId, setShowModal, setShowSuccessToast, setShowErrorToast, volver) => {
     try {
-        const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tareaId}`, {
+        const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tareaId}`, {
             method: 'DELETE',
             mode: "cors",
             headers: {
@@ -51,6 +58,7 @@ const eliminarTareaConfirmed = async (proyectoId, tareaId, setShowModal, setShow
 function DetalleTarea() {
     const router = useRouter();
     const [tarea, setTarea] = useState({});
+    const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true); // Agregamos estado para controlar la carga
     const [showModal, setShowModal] = useState(false);
     const [tareaToDelete, setTareaToDelete] = useState(null);
@@ -63,19 +71,32 @@ function DetalleTarea() {
     useEffect(() => {
         const obtenerTarea = async () => {
             try {
-                const proyectoData = await fetchTarea(proyectoId, tareaId);
-                setTarea(proyectoData);
+                setLoading(true);
+                const tareaData = await fetchTarea(proyectoId, tareaId);
+                setTarea(tareaData);
+                await obtenerTickets(tareaData);
             } catch (error) {
                 console.error('Error al obtener tarea:', error);
             } finally {
-                setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
+                setLoading(false);
             }
         };
-
+        
+        const obtenerTickets = async (tarea) => {
+            try {
+                const fetchedTickets = await fetchTickets();
+        
+                const filteredTickets = tarea.ticketIds ? fetchedTickets.filter(ticket => tarea.ticketIds.includes(ticket.ticketId)) : [];
+                setTickets(filteredTickets);
+            } catch (error) {
+                console.error('Error al obtener Tickets:', error);
+            }
+        };
+    
         if (proyectoId && tareaId) {
             obtenerTarea();
         }
-    }, []);
+    }, [proyectoId, tareaId]); // Add proyectoId and tareaId as dependencies for useEffect
 
     const volver = () => {
         router.push('/proyecto/detalle?id=' + proyectoId);
@@ -135,8 +156,7 @@ function DetalleTarea() {
 
                         <div>
                             <label className="font-bold block mb-2">Tickets asociados</label>
-                            <p>MODIFICAR ACA #ID - DESCRIPCION TICKET</p>
-                            <p>{tarea.ticketIds.length > 0 ? tarea.ticketIds.join(', ') : "-"}</p>
+                            <p>{tarea.ticketIds.length > 0 && tickets ? tickets.map(ticket => <span key={ticket.ticketId}>#{ticket.ticketId} - {ticket.nombre} ({ticket.descripcion.slice(0, 50)})<br /></span>) : "-"}</p>
                         </div>
                     </div>
                     <div className='text-right'>
