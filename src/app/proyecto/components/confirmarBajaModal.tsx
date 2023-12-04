@@ -1,4 +1,4 @@
-function ConfirmarBajaModal({ showModal, hideModal, onConfirm }) {
+function ConfirmarBajaModal({ showModal, hideModal, onConfirm, message }) {
     return (
         <>
             {showModal && (
@@ -43,7 +43,7 @@ function ConfirmarBajaModal({ showModal, hideModal, onConfirm }) {
                                 />
                             </svg>
                             <h3 className="mb-5 text-lg font-normal text-gray-500">
-                                ¿Estás seguro que deseas borrar este Proyecto? Se eliminarán también todas las Tareas asociadas al mismo.
+                                {message}
                             </h3>
                             <button
                                 onClick={onConfirm}

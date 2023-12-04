@@ -6,6 +6,8 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/app/util/spinner';
 import ConfirmarBajaModal from './confirmarBajaModal';
+import SuccessToast from './successToast';
+import ErrorToast from './errorToast';
 
 async function fetchProyectos() {
     try {
@@ -22,7 +24,7 @@ async function fetchProyectos() {
     }
 }
 
-const eliminarProyectoConfirmed = async (proyectoId, setShowModal, setProyectos) => {
+const eliminarProyectoConfirmed = async (proyectoId, setShowModal, setProyectos, setShowSuccessToast, setShowErrorToast) => {
     try {
         const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`, {
             method: 'DELETE',
@@ -33,8 +35,13 @@ const eliminarProyectoConfirmed = async (proyectoId, setShowModal, setProyectos)
         });
 
         if (!res.ok) {
+            setShowErrorToast(true);
+            setShowSuccessToast(false);
             throw new Error('Error al eliminar el proyecto');
         }
+
+        setShowErrorToast(false);
+        setShowSuccessToast(true);
 
         const proyectos = await fetchProyectos();
         setProyectos(proyectos);
@@ -52,6 +59,8 @@ function ListaProyectos() {
     const [showModal, setShowModal] = useState(false);
     const [proyectoToDelete, setProyectoToDelete] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showSuccessToast, setShowSuccessToast] = useState(false);
+    const [showErrorToast, setShowErrorToast] = useState(false);
 
     useEffect(() => {
         const obtenerProyectos = async () => {
@@ -105,17 +114,21 @@ function ListaProyectos() {
                             </div>
                         )}></Column>
                         <Column field="descripcion" header="Descripción" body={(row) => row.descripcion.length > 50 ? `${row.descripcion.substring(0, 50)}...` : row.descripcion}></Column>
-                        <Column field="fechaInicio" header="Fecha Inicio"></Column>
-                        <Column field="fechaFin" header="Fecha Fin"></Column>
+                        <Column header="Fecha Inicio" body={(row) => row.fechaInicio ? row.fechaInicio : "-"}></Column>
+                        <Column header="Fecha Fin" body={(row) => row.fechaFin ? row.fechaFin : "-"}></Column>
                         <Column field="estado" header="Estado"></Column>
                         <Column header="Líder" body={(row) => row.liderAsignado != null ? `${row.liderAsignado.nombre} ${row.liderAsignado.apellido}` : "-"}></Column>
                         <Column header="Acciones" body={(row) => accionesProyecto(row)}></Column>
                     </DataTable>
 
+                    <SuccessToast showToast={showSuccessToast} hideToast={() => setShowSuccessToast(false)}></SuccessToast>
+                    <ErrorToast showToast={showErrorToast} hideToast={() => setShowErrorToast(false)}></ErrorToast>
+
                     <ConfirmarBajaModal
                         showModal={showModal}
                         hideModal={() => setShowModal(false)}
-                        onConfirm={() => eliminarProyectoConfirmed(proyectoToDelete, setShowModal, setProyectos)}
+                        onConfirm={() => eliminarProyectoConfirmed(proyectoToDelete, setShowModal, setProyectos, setShowSuccessToast, setShowErrorToast)}
+                        message="¿Estás seguro que deseas borrar este Proyecto? Se eliminarán también todas las Tareas asociadas al mismo."
                     />
                 </>
             ) : (
