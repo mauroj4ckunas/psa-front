@@ -129,47 +129,26 @@ function AltaTarea() {
     };
 
     useEffect(() => {
-
-        const obtenerTickets = async () => {
+        const obtenerDatos = async () => {
             try {
                 setLoading(true);
-                const tickets = await fetchTickets();
-                setTickets(tickets);
+
+                const ticketsData = await fetchTickets();
+                setTickets(ticketsData);
+
+                const tareaEstadosData = await fetchTareaEstados();
+                setTareaEstados(tareaEstadosData);
+
+                const colaboradoresData = await fetchColaboradores();
+                setColaboradores(colaboradoresData);
             } catch (error) {
-                console.error('Error al obtener Tickets:', error);
+                console.error('Error al obtener datos:', error);
             } finally {
-                setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
+                setLoading(false);
             }
         };
 
-        const obtenerTareaEstados = async () => {
-            try {
-                setLoading(true);
-                const tareaEstados = await fetchTareaEstados();
-                setTareaEstados(tareaEstados);
-            } catch (error) {
-                console.error('Error al obtener estados de Tarea:', error);
-            } finally {
-                setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
-            }
-        };
-
-        const obtenerColaboradores = async () => {
-            try {
-                setLoading(true);
-                const colaboradores = await fetchColaboradores();
-                setColaboradores(colaboradores);
-            } catch (error) {
-                console.error('Error al obtener Colaboradores:', error);
-            } finally {
-                setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
-            }
-        };
-
-        obtenerColaboradores();
-        obtenerTareaEstados();
-        obtenerTickets();
-
+        obtenerDatos();
 
     }, []);
 

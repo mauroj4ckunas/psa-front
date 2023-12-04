@@ -71,30 +71,25 @@ function DetalleTarea() {
     useEffect(() => {
         const obtenerTarea = async () => {
             try {
-                const proyectoData = await fetchTarea(proyectoId, tareaId);
-                setTarea(proyectoData);
-    
-                // Move the call to obtenerTickets here, after setTarea
-                obtenerTickets(proyectoData);
+                setLoading(true);
+                const tareaData = await fetchTarea(proyectoId, tareaId);
+                setTarea(tareaData);
+                await obtenerTickets(tareaData);
             } catch (error) {
                 console.error('Error al obtener tarea:', error);
             } finally {
                 setLoading(false);
             }
         };
-    
+        
         const obtenerTickets = async (tarea) => {
             try {
-                setLoading(true);
                 const fetchedTickets = await fetchTickets();
-                
-                // Check if tarea.ticketIds is defined before filtering tickets
+        
                 const filteredTickets = tarea.ticketIds ? fetchedTickets.filter(ticket => tarea.ticketIds.includes(ticket.ticketId)) : [];
                 setTickets(filteredTickets);
             } catch (error) {
                 console.error('Error al obtener Tickets:', error);
-            } finally {
-                setLoading(false);
             }
         };
     

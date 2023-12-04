@@ -154,6 +154,7 @@ function ModificarTarea() {
                 setLoading(true);
                 const tareaData = await fetchTarea(proyectoId, tareaId);
                 setTarea(tareaData);
+                await obtenerTickets();
             } catch (error) {
                 console.error('Error al obtener tarea:', error);
             } finally {
@@ -189,7 +190,7 @@ function ModificarTarea() {
             obtenerColaboradores();
             obtenerTareaEstados();
             obtenerTarea();
-            obtenerTickets();
+            // obtenerTickets();
         }
 
 
