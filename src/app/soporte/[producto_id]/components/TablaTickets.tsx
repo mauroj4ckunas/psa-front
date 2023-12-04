@@ -57,7 +57,7 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     const [ticketAEditar, setTicketAEditar] = useState<ticket | null>(null);
 
     const aceptarEliminarTicket = (ticketAEliminar: ticket) => {
-        const url = `${url_base}/tickets/${ticketAEliminar.ticketId}`
+        const url = `https://deploy-java-17.onrender.com/soporte/tickets/${ticketAEliminar.ticketId}`
         fetch(url, {method: 'DELETE'})
             .then(response => {
                 if(response.ok) {
@@ -80,9 +80,9 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
 
     const accionesTickets = (ticket: ticket) => {
         return <div className='w-3/4 flex justify-around items-center'>
-            <div className=' bg-red-500 text-white rounded-md p-3 text-xl hover:bg-red-300 hover:text-black cursor-pointer' onClick={() => eliminarTicket(ticket)}><FaTrashAlt /></div>
             <div className=' bg-slate-500 text-white rounded-md p-3 text-xl hover:bg-slate-300 hover:text-slate-500 cursor-pointer' onClick={() => {setPanelDetalles(true); setVerTicket(ticket)}}><FaEye /></div>
             <div className=' bg-green-500 text-white rounded-md p-3 text-xl hover:bg-green-300 hover:text-black cursor-pointer' onClick={() => {setPanelEditar(true); setTicketAEditar(ticket)}}><FaPencilAlt /></div>
+            <div className=' bg-red-500 text-white rounded-md p-3 text-xl hover:bg-red-300 hover:text-black cursor-pointer' onClick={() => eliminarTicket(ticket)}><FaTrashAlt /></div>
         </div>;
     };
 
@@ -120,7 +120,7 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     }
 
   return <>
-    <header className="w-full flex flex-grow justify-between text-black font-bold mb-4">
+    <header className="w-full flex justify-between text-black font-bold mb-4">
             <div className='text-4xl'>
               Listado de Tickets
             </div>

@@ -13,6 +13,9 @@ import { allColaboradores } from '../../services/colaboradores/allColaboradores'
 import { cliente } from '@/app/models/cliente'
 import { colaborador } from '@/app/models/colaborador'
 import { Toast } from 'primereact/toast'
+import { tarea } from '@/app/models/tarea'
+import { getTareasDisponibles } from '../services/getTareas'
+import { tareaResponse } from '@/app/models/tareaResponse'
 
 interface Props {
     visible: boolean,
@@ -34,6 +37,10 @@ function fetchColaboradores() {
     return allColaboradores()
 }
 
+function fetchTareas() {
+    return getTareasDisponibles();
+}
+
 const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Props) {
@@ -50,9 +57,9 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
     const [estado, setEstado] = useState<string>('');
     const [nombre, setNombre] = useState<string>('');
     const [descripcion, setDescripcion] = useState<string>('');
-    const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+    const [tareas, setTareas] = useState<tarea[]>([]);
+    const [selectedTareas, setSelectedTareas] = useState<number[]>([]);
     const [botonDeshabilitado, setBotonDeshabilitado] = useState<boolean>(false);
-    const numbers = Array.from({ length: 5 }, (_, i) => ({ label: `${i + 1}`, value: i + 1 }));
 
     const toast = useRef<Toast>(null);
     
@@ -72,11 +79,12 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
         ticket.estado && setEstado(ticket.estado);
         ticket.nombre && setNombre(ticket.nombre);
         ticket.descripcion && setDescripcion(ticket.descripcion);
-        ticket.tareaIds && setSelectedNumbers(ticket.tareaIds);
+        ticket.tareas && setSelectedTareas(ticket.tareas.map(t => t.tareaId));
         ticket.clienteId && setSelectedCliente(ticket.clienteId);
         ticket.colaboradorId && setSelectedColaborador(ticket.colaboradorId);
         fetchClientes().then(data => {!('error' in data) && setClientes(data)})
         fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data)})
+        fetchTareas().then(data => setTareas(data));
     }, [productoId])
 
     const prioridades = ['ALTA', 'MEDIA', 'BAJA'];
@@ -86,7 +94,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedCliente || !selectedColaborador || selectedNumbers.length === 0) {
+        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedColaborador || selectedTareas.length === 0) {
             toast.current?.show({
                 severity: 'error',
                 summary: 'Error',
@@ -105,9 +113,9 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
             estado: estado,
             clienteId: selectedCliente,
             colaboradorId: selectedColaborador,
-            tareaIds: selectedNumbers
+            tareaIds: selectedTareas
         };
-        fetch(`${url_base}/tickets/${ticket.ticketId}`, {
+        fetch(`https://deploy-java-17.onrender.com/soporte/tickets/${ticket.ticketId}`, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -130,46 +138,64 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
         <Dialog visible={visible} header={header} className=' w-3/4'
                 onHide={cerrar} draggable={false} closeOnEscape={true}>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 p-4">
-                <InputText
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    placeholder="Nombre del Ticket"
-                    
-                />
-                <InputText 
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                    placeholder="Descripción"
-                    
-                />
-                <Dropdown 
-                    value={prioridad} 
-                    options={prioridades} 
-                    onChange={(e) => setPrioridad(e.value)}
-                    placeholder="Seleccione una prioridad"
-                    
-                />
-                <Dropdown 
-                    value={severidad} 
-                    options={severidades} 
-                    onChange={(e) => setSeveridad(e.value)}
-                    placeholder="Seleccione una severidad"
-                    
-                />
-                <Dropdown 
-                    value={categoria} 
-                    options={categorias} 
-                    onChange={(e) => setCategoria(e.value)}
-                    placeholder="Seleccione una categoría"
-                    
-                />
-                <Dropdown 
-                    value={estado} 
-                    options={estados} 
-                    onChange={(e) => setEstado(e.value)}
-                    placeholder="Seleccione un estado"
-                    
-                />
+                <div>
+                    <p className=' font-bold'>Nombre del Ticket:</p>
+                    <InputText
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Nombre del Ticket"
+                        className='w-full h-10'
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Descripción del Ticket:</p> 
+                    <InputText 
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        placeholder="Descripción"
+                        className='w-full h-10'
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Prioridad del Ticket:</p> 
+                    <Dropdown 
+                        value={prioridad} 
+                        options={prioridades} 
+                        onChange={(e) => setPrioridad(e.value)}
+                        placeholder="Seleccione una prioridad"
+                        className='w-full h-10'
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Severidad del Ticket:</p> 
+                    <Dropdown 
+                        value={severidad} 
+                        options={severidades} 
+                        onChange={(e) => setSeveridad(e.value)}
+                        placeholder="Seleccione una severidad"
+                        className='w-full h-10'
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Categoría del Ticket:</p> 
+                    <Dropdown 
+                        value={categoria} 
+                        options={categorias} 
+                        onChange={(e) => setCategoria(e.value)}
+                        placeholder="Seleccione una categoría"
+                        className='w-full h-10'
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Categoría del Ticket:</p> 
+                    <Dropdown 
+                        value={estado} 
+                        options={estados} 
+                        onChange={(e) => setEstado(e.value)}
+                        placeholder="Seleccione un estado"
+                        className='w-full h-10'
+                    />
+                </div>
                 {/* <Dropdown 
                     value={selectedVersion}
                     options={versiones.map(ver => ({ label: ver.version, value: ver.productoVersionId }))}
@@ -177,27 +203,39 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
                     placeholder="Seleccione una versión"
                     
                 /> */}
-                <Dropdown 
-                    value={selectedCliente}
-                    options={clientes.map(cli => ({ label: cli.razonSocial, value: cli.clientId }))}
-                    onChange={(e) => setSelectedCliente(e.value)}
-                    placeholder="Seleccione cliente asignado"
-                    
-                />
-                <Dropdown 
-                    value={selectedColaborador}
-                    options={colaboradores.map(col => ({ label: col.nombre, value: col.colaboradorId }))}
-                    onChange={(e) => setSelectedColaborador(e.value)}
-                    placeholder="Seleccione colaborador asignado"
-                    
-                />
-                <MultiSelect
-                    value={selectedNumbers}
-                    options={numbers}
-                    onChange={(e) => setSelectedNumbers(e.value)}
-                    placeholder="Seleccione números"
-                    
-                />
+                <div>
+                    <p className=' font-bold'>Cliente asignado al Ticket:</p> 
+                    <Dropdown 
+                        value={selectedCliente}
+                        options={clientes.map(cli => ({ label: cli.razonSocial, value: cli.clientId }))}
+                        onChange={(e) => setSelectedCliente(e.value)}
+                        placeholder="Seleccione cliente asignado"
+                        className='w-full h-10'
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Colaborador asignado al Ticket:</p> 
+                    <Dropdown 
+                        value={selectedColaborador}
+                        options={colaboradores.map(col => ({ label: col.nombre, value: col.colaboradorId }))}
+                        onChange={(e) => setSelectedColaborador(e.value)}
+                        placeholder="Seleccione colaborador asignado"
+                        className='w-full h-10'
+                        
+                    />
+                </div>
+                <div>
+                    <p className=' font-bold'>Tareas asignadas al Ticket:</p> 
+                    <MultiSelect
+                        value={selectedTareas}
+                        options={tareas.map(t => ({ label: `ID ${t.id} - ${t.descripcion}`, value: t.id }))}
+                        onChange={(e) => setSelectedTareas(e.value)}
+                        placeholder="Seleccionar tareas a asignar"
+                        className='w-full h-10'
+                        selectAll={false}
+                    />
+                </div>
+                <div></div>
                 <Button type="submit" label="Guardar" 
                     disabled={botonDeshabilitado}
                     className="mt-2 bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"

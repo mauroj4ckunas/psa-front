@@ -6,6 +6,8 @@ import { allClientes } from '../../services/clientes/allClientes'
 import { allColaboradores } from '../../services/colaboradores/allColaboradores'
 import { cliente } from '@/app/models/cliente'
 import { colaborador } from '@/app/models/colaborador'
+import { getTareasDisponibles } from '../services/getTareas'
+import { tarea } from '@/app/models/tarea'
 
 interface Props {
     visible: boolean,
@@ -21,11 +23,17 @@ function fetchColaboradores() {
   return allColaboradores()
 }
 
+function fetchTareas() {
+    return getTareasDisponibles();
+}
+
+
 function PanelDetalleTicket({ visible, onHide, ticket }: Props) {
 
   const [cliente, setCliente] = useState<cliente>();
   const [colaborador, setColaborador] = useState<colaborador>();
-
+  const [tareas, setTareas] = useState<tarea[]>([]);
+  
   useEffect(() => {
     fetchClientes().then(data => {
       const clienteArr: cliente[] = data;
@@ -35,6 +43,7 @@ function PanelDetalleTicket({ visible, onHide, ticket }: Props) {
       const clienteArr: colaborador[] = data;
       clienteArr.forEach(c => (c.colaboradorId === ticket.colaboradorId) && setColaborador(c));
     })
+    fetchTareas().then(data => {setTareas(data)});
   },[]);
 
   return <Dialog visible={visible} onHide={onHide} draggable={false} closeOnEscape={true}>
@@ -58,6 +67,21 @@ function PanelDetalleTicket({ visible, onHide, ticket }: Props) {
                   <strong>Descripción:</strong> {ticket.descripcion}
                 </div>
               )}
+              
+              {
+                <div className=' mt-4'>
+                <strong>Tareas asociadas:</strong>
+                {
+                (ticket.tareas && ticket.tareas.length > 0) ?
+                  ticket.tareas.map((t, i) => {
+                    if (tareas.find(a => a.id === t.tareaId)) return <div key={i}>
+                      <strong>{t.tareaId} - </strong> {t.descripcion}
+                    </div>
+                  }) :
+                  <strong>Sin tareas asociadas </strong>
+                }
+                </div>
+              }
             </div>
             <div className="space-y-3">
               {ticket.prioridad && (
@@ -80,11 +104,14 @@ function PanelDetalleTicket({ visible, onHide, ticket }: Props) {
                   <strong>Estado:</strong> {ticket.estado}
                 </div>
               )}
-              {ticket.clienteId && (
+              {ticket.clienteId ? 
                 <div>
                   <strong>Cliente:</strong> {cliente?.razonSocial}
+                </div> :
+                <div>
+                  <strong>Sin cliente asignado</strong>
                 </div>
-              )}
+              }
               {ticket.colaboradorId && (
                 <div>
                   <strong>Colaborador:</strong> {colaborador?.nombre}
