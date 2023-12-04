@@ -196,6 +196,9 @@ function ModificarProyecto() {
                 else {
                     setShowSuccessToast(true);
                     setShowErrorToast(false);
+                    setTimeout(() => {
+                        router.push(`/proyecto/detalle?id=${proyectoId}`);
+                    }, 1500);
                 }
             })
         setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado

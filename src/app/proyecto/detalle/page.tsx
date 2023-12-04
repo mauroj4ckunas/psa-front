@@ -130,9 +130,9 @@ function DetalleProyecto() {
               <div className='font-bold'>Líder de Proyecto</div>
               <div className='col-span-2'>{proyecto.liderAsignado != null ? proyecto.liderAsignado.nombre + " " + proyecto.liderAsignado.apellido : "-"}</div>
               <div className='font-bold'>Fecha Inicio</div>
-              <div className='col-span-2'>{proyecto.fechaInicio}</div>
+              <div className='col-span-2'>{proyecto.fechaInicio ? proyecto.fechaInicio : "-"}</div>
               <div className='font-bold'>Fecha Fin</div>
-              <div className='col-span-2'>{proyecto.fechaFin}</div>
+              <div className='col-span-2'>{proyecto.fechaFin ? proyecto.fechaFin : "-"}</div>
             </div>
           </div>
           <hr />

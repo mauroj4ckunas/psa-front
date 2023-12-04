@@ -114,8 +114,8 @@ function ListaProyectos() {
                             </div>
                         )}></Column>
                         <Column field="descripcion" header="Descripción" body={(row) => row.descripcion.length > 50 ? `${row.descripcion.substring(0, 50)}...` : row.descripcion}></Column>
-                        <Column field="fechaInicio" header="Fecha Inicio"></Column>
-                        <Column field="fechaFin" header="Fecha Fin"></Column>
+                        <Column header="Fecha Inicio" body={(row) => row.fechaInicio ? row.fechaInicio : "-"}></Column>
+                        <Column header="Fecha Fin" body={(row) => row.fechaFin ? row.fechaFin : "-"}></Column>
                         <Column field="estado" header="Estado"></Column>
                         <Column header="Líder" body={(row) => row.liderAsignado != null ? `${row.liderAsignado.nombre} ${row.liderAsignado.apellido}` : "-"}></Column>
                         <Column header="Acciones" body={(row) => accionesProyecto(row)}></Column>

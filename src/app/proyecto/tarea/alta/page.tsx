@@ -40,7 +40,7 @@ async function saveTarea(proyectoId, tarea) {
             descripcion: tarea.descripcion ? tarea.descripcion : null,
             fechaInicio: tarea.fechaInicio,
             fechaFin: tarea.fechaFin,
-            estadoIdm: tarea.estadoIdm,
+            estadoIdm: tarea.estadoIdm ? tarea.estadoIdm : null,
             colaboradorAsignadoId: tarea.colaboradorAsignado ? tarea.colaboradorAsignado.legajo : null,
             ticketIds: tarea.ticketIds // SI PERMITIMOS ASOCIAR EN EL ALTA
         })
