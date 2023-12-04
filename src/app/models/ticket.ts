@@ -14,4 +14,5 @@ export type ticket = {
     createdAt: string | null;
     updatedAt: string | null;
     tareas: tareaResponse[] | null;
+    tareaIds: number[] | null
 }
