@@ -116,18 +116,7 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
 
     const headerTablaTicket = (
         <div className='w-full flex items-center justify-end'>
-            <input 
-                type="text" 
-                placeholder="Buscar por ID..." 
-                value={busquedaId}
-                onChange={(e) => setBusquedaId(e.target.value)}
-                className="p-2 border border-gray-300 rounded mx-4"
-            />
-            <button className=' px-5 py-3 rounded-md bg-blue-400 font-semibold shadow-md hover:bg-blue-700 text-black'
-                    onClick={() => setPanelCrear(true)}
-            >
-                Crear Ticket
-            </button>
+
         </div>
     )
 
@@ -137,6 +126,25 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
     }
 
   return <>
+    <header className="w-full flex flex-grow justify-between text-black font-bold mb-4">
+            <div className='text-4xl'>
+              Listado de Tickets
+            </div>
+            <div className=''>
+                <input 
+                    type="text" 
+                    placeholder="Buscar por ID..." 
+                    value={busquedaId}
+                    onChange={(e) => setBusquedaId(e.target.value)}
+                    className="p-2 border border-gray-300 rounded mx-4"
+                />
+                <button className=' px-5 py-3 rounded-md bg-blue-400 font-semibold shadow-md hover:bg-blue-700 text-black'
+                        onClick={() => setPanelCrear(true)}
+                >
+                    Crear Ticket
+                </button>
+            </div>
+    </header>
     <DataTable value={ticketsFiltrados} header={headerTablaTicket} emptyMessage={"Sin Tickets actualmente"} 
                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
     >

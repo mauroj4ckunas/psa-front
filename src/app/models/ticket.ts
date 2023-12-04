@@ -1,3 +1,4 @@
+import { tarea } from "./tarea";
 
 export type ticket = {
     ticketId: number;
@@ -12,5 +13,5 @@ export type ticket = {
     colaboradorId: number | null;
     createdAt: string | null;
     updatedAt: string | null;
-    tareaIds: number[] | null;
+    tareas: tarea[] | null;
 }

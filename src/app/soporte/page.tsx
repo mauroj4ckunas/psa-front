@@ -15,8 +15,8 @@ async function Soporte() {
   const listaDeProductos = await getAllProductos();
 
   return <>
-    <main className='flex flex-col items-center p-16"'>
-        <header className="w-full h-[20%] flex flex-grow justify-between text-black font-bold mb-4">
+    <main className='min-h-full h-full items-center px-5 py-5 bg-gray-300 m-5 rounded-xl divide-y-2'>
+        <header className="w-full flex flex-grow justify-between text-black font-bold mb-4">
               <div className='text-4xl'>
                 Listado de Productos
               </div>
