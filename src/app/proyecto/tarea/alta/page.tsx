@@ -8,7 +8,7 @@ import SuccessToast from "../../components/successToast"
 import { FaInfoCircle } from 'react-icons/fa';
 
 async function fetchTareaEstados() {
-    const res = await fetch(`http://localhost:8080/tarea/estados`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/tarea/estados`);
     if (!res.ok) {
         throw new Error('Error al obtener estados de Tarea');
     }
@@ -17,7 +17,7 @@ async function fetchTareaEstados() {
 }
 
 async function fetchColaboradores() {
-    const res = await fetch(`http://localhost:8080/colaborador`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/colaborador`);
     if (!res.ok) {
         throw new Error('Error al obtener Colaboradores');
     }
@@ -30,7 +30,7 @@ async function saveTarea(proyectoId, tarea) {
         httpOk: true,
         body: {}
     };
-    await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea`, {
+    await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea`, {
         method: "POST",
         mode: "cors",
         headers: {
