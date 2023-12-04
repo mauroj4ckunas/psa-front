@@ -18,11 +18,7 @@ async function fetchProyecto(proyectoId) {
 }
 
 async function fetchProyectoEstados() {
-<<<<<<< HEAD
-    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/estados`);
-=======
     const res = await fetch(`http://localhost:8080/proyecto/estado`);
->>>>>>> proyectos-frontend
     if (!res.ok) {
         throw new Error('Error al obtener estados de Proyecto');
     }
