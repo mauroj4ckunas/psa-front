@@ -26,7 +26,7 @@ interface Props {
 function fetchVersiones(productoId: number) {
     return getVersiones(productoId)
 }
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function TablaTickets({ listaDeTickets, productoId }: Props) {
 

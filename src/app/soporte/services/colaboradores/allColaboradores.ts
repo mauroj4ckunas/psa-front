@@ -1,6 +1,6 @@
 import { colaborador } from "@/app/models/colaborador";
 
-const url_base = `${process.env.NEXT_PUBLIC_URL_BASE}`
+const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 export async function allColaboradores(): Promise<colaborador[]> {
     const url = `${url_base}/colaboradores`

@@ -9,7 +9,7 @@ import ConfirmarBajaModal from './confirmarBajaModal';
 
 async function fetchProyectos() {
     try {
-        const res = await fetch("http://localhost:8080/proyecto");
+        const res = await fetch("https://api-proyectos-wp7y.onrender.com/proyecto");
         if (!res.ok) {
             throw new Error('Error al obtener proyectos');
         }
@@ -24,7 +24,7 @@ async function fetchProyectos() {
 
 const eliminarProyectoConfirmed = async (proyectoId, setShowModal, setProyectos) => {
     try {
-        const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`, {
+        const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}`, {
             method: 'DELETE',
             mode: "cors",
             headers: {
