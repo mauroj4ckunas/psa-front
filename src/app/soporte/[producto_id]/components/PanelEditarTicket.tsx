@@ -94,7 +94,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedColaborador || selectedTareas.length === 0) {
+        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedColaborador) {
             toast.current?.show({
                 severity: 'error',
                 summary: 'Error',
