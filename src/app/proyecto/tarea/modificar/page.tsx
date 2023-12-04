@@ -8,7 +8,7 @@ import SuccessToast from "../../components/successToast";
 import { FaInfoCircle } from 'react-icons/fa';
 
 async function fetchTarea(proyectoId, tareaId) {
-    const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tareaId}`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tareaId}`);
     if (!res.ok) {
         throw new Error('Error al obtener tarea');
     }
@@ -17,7 +17,7 @@ async function fetchTarea(proyectoId, tareaId) {
 }
 
 async function fetchTareaEstados() {
-    const res = await fetch(`http://localhost:8080/tarea/estados`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/tarea/estados`);
     if (!res.ok) {
         throw new Error('Error al obtener estados de Tarea');
     }
@@ -26,7 +26,7 @@ async function fetchTareaEstados() {
 }
 
 async function fetchColaboradores() {
-    const res = await fetch(`http://localhost:8080/colaborador`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/colaborador`);
     if (!res.ok) {
         throw new Error('Error al obtener Colaboradores');
     }
@@ -39,7 +39,7 @@ async function saveTarea(proyectoId, tarea) {
         httpOk: true,
         body: {}
     };
-    await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tarea.id}`, {
+    await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tarea.id}`, {
         method: "PUT",
         mode: "cors",
         headers: {

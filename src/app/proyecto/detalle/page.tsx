@@ -21,7 +21,7 @@ async function fetchProyecto(proyectoId) {
 
 const eliminarProyectoConfirmed = async (proyectoId, setShowModal, setShowSuccessToast, setShowErrorToast, volver) => {
   try {
-    const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}`, {
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}`, {
       method: 'DELETE',
       mode: "cors",
       headers: {

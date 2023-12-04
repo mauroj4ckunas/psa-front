@@ -10,7 +10,7 @@ import SuccessToast from '../../components/successToast';
 import ErrorToast from '../../components/errorToast';
 
 async function fetchTarea(proyectoId, tareaId) {
-    const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tareaId}`);
+    const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tareaId}`);
     if (!res.ok) {
         throw new Error('Error al obtener tarea');
     }
@@ -22,7 +22,7 @@ async function fetchTarea(proyectoId, tareaId) {
 
 const eliminarTareaConfirmed = async (proyectoId, tareaId, setShowModal, setShowSuccessToast, setShowErrorToast, volver) => {
     try {
-        const res = await fetch(`http://localhost:8080/proyecto/${proyectoId}/tarea/${tareaId}`, {
+        const res = await fetch(`https://api-proyectos-wp7y.onrender.com/proyecto/${proyectoId}/tarea/${tareaId}`, {
             method: 'DELETE',
             mode: "cors",
             headers: {
