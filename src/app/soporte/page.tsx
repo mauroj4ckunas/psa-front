@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import TablaProductos from './components/TablaProductos';
 import { producto } from '../models/producto';
 import { allProductos } from './services/productos/allProductos';
@@ -10,9 +10,16 @@ async function getAllProductos(): Promise<producto[] | badRequest> {
   return allProductos();
 }
 
-async function Soporte() {
+function Soporte() {
   
-  const listaDeProductos = await getAllProductos();
+  const [listaDeProductos, setListaDeProductos] = useState<producto[] | badRequest>({
+    error: '',
+    message: '',
+  });
+
+  useEffect(() => {
+    getAllProductos().then(data => !('error' in data) && setListaDeProductos(data));
+  }, []);
 
   return <>
     <main className='min-h-full h-full items-center px-5 py-5 bg-gray-200 m-5 rounded-xl divide-y-2'>

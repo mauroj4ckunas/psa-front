@@ -13,6 +13,9 @@ import { allColaboradores } from '../../services/colaboradores/allColaboradores'
 import { cliente } from '@/app/models/cliente'
 import { colaborador } from '@/app/models/colaborador'
 import { Toast } from 'primereact/toast'
+import { tarea } from '@/app/models/tarea'
+import { getTareasDisponibles } from '../services/getTareas'
+import { tareaResponse } from '@/app/models/tareaResponse'
 
 interface Props {
     visible: boolean,
@@ -34,6 +37,10 @@ function fetchColaboradores() {
     return allColaboradores()
 }
 
+function fetchTareas() {
+    return getTareasDisponibles();
+}
+
 const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Props) {
@@ -50,9 +57,12 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
     const [estado, setEstado] = useState<string>('');
     const [nombre, setNombre] = useState<string>('');
     const [descripcion, setDescripcion] = useState<string>('');
-    const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+    const [tareas, setTareas] = useState<tareaResponse[]>([]);
+    const [selectedTareas, setSelectedTareas] = useState<{
+        label: string,
+        value: number
+    }[]>([]);
     const [botonDeshabilitado, setBotonDeshabilitado] = useState<boolean>(false);
-    const numbers = Array.from({ length: 5 }, (_, i) => ({ label: `${i + 1}`, value: i + 1 }));
 
     const toast = useRef<Toast>(null);
     
@@ -72,11 +82,15 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
         ticket.estado && setEstado(ticket.estado);
         ticket.nombre && setNombre(ticket.nombre);
         ticket.descripcion && setDescripcion(ticket.descripcion);
-        ticket.tareaIds && setSelectedNumbers(ticket.tareaIds);
+        ticket.tareas && setSelectedTareas(ticket.tareas.map(t => ({label: `ID ${t.tareaId} - ${t.descripcion}`, value: t.tareaId})));
         ticket.clienteId && setSelectedCliente(ticket.clienteId);
         ticket.colaboradorId && setSelectedColaborador(ticket.colaboradorId);
         fetchClientes().then(data => {!('error' in data) && setClientes(data)})
         fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data)})
+        fetchTareas().then(data => {setTareas(data.map(d => ({
+            tareaId: d.id,
+            descripcion: d.descripcion
+        })))});
     }, [productoId])
 
     const prioridades = ['ALTA', 'MEDIA', 'BAJA'];
@@ -86,7 +100,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedCliente || !selectedColaborador || selectedNumbers.length === 0) {
+        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedColaborador || selectedTareas.length === 0) {
             toast.current?.show({
                 severity: 'error',
                 summary: 'Error',
@@ -105,7 +119,7 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
             estado: estado,
             clienteId: selectedCliente,
             colaboradorId: selectedColaborador,
-            tareaIds: selectedNumbers
+            tareaIds: selectedTareas
         };
         fetch(`${url_base}/tickets/${ticket.ticketId}`, {
             headers: {
@@ -192,10 +206,10 @@ function PanelEditarTicket({ visible, productoId, editar, cerrar, ticket }: Prop
                     
                 />
                 <MultiSelect
-                    value={selectedNumbers}
-                    options={numbers}
-                    onChange={(e) => setSelectedNumbers(e.value)}
-                    placeholder="Seleccione números"
+                    value={selectedTareas}
+                    options={tareas.map(t => ({label: `ID ${t.tareaId} - ${t.descripcion}`, value: t.tareaId}))}
+                    onChange={(e) => setSelectedTareas(e.value)}
+                    placeholder="Seleccione tarea"
                     
                 />
                 <Button type="submit" label="Guardar" 

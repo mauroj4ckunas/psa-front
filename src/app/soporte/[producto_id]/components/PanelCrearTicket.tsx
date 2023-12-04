@@ -14,6 +14,8 @@ import { cliente } from '@/app/models/cliente'
 import { colaborador } from '@/app/models/colaborador'
 import { Toast } from 'primereact/toast'
 import { Hourglass } from 'react-loader-spinner'
+import { getTareasDisponibles } from '../services/getTareas'
+import { tarea } from '@/app/models/tarea'
 
 interface Props {
     visible: boolean,
@@ -34,6 +36,10 @@ function fetchColaboradores() {
     return allColaboradores()
 }
 
+function fetchTareas() {
+    return getTareasDisponibles();
+}
+
 const url_base = `${process.env.NEXT_PUBLIC_URL_SOPORTE}`
 
 function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
@@ -50,8 +56,8 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
     const [estado, setEstado] = useState<string>('');
     const [nombre, setNombre] = useState<string>('');
     const [descripcion, setDescripcion] = useState<string>('');
-    const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
-    const numbers = Array.from({ length: 5 }, (_, i) => ({ label: `${i + 1}`, value: i + 1 }));
+    const [tareas, setTareas] = useState<tarea[]>([]);
+    const [selectedTareas, setSelectedTareas] = useState<number[]>([]);
     const [botonDeshabilitado, setBotonDeshabilitado] = useState<boolean>(false);
 
     const toast = useRef<Toast>(null);
@@ -66,13 +72,14 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
         setEstado('')
         setNombre('')
         setDescripcion('')
-        setSelectedNumbers([]);
+        setSelectedTareas([]);
     }
 
     useEffect(() => {
         fetchVersiones(productoId).then(data => !('error' in data) && setVersiones(data))
         fetchClientes().then(data => {!('error' in data) && setClientes(data);})
         fetchColaboradores().then(data => {!('error' in data) && setColaboradores(data);})
+        fetchTareas().then(data => {setTareas(data)});
     }, [])
 
     const prioridades = ['ALTA', 'MEDIA', 'BAJA'];
@@ -82,7 +89,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedCliente || !selectedColaborador || selectedNumbers.length === 0) {
+        if (!prioridad || !severidad || !categoria || !estado || !selectedVersion || !selectedColaborador || selectedTareas.length === 0) {
             toast.current?.show({
                 severity: 'error',
                 summary: 'Error',
@@ -101,7 +108,7 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
             estado: estado,
             clienteId: selectedCliente,
             colaboradorId: selectedColaborador,
-            tareaIds: selectedNumbers,
+            tareaIds: selectedTareas,
         };
         fetch(`${url_base}/tickets/${selectedVersion}`, {
             headers: {
@@ -189,10 +196,10 @@ function PanelDetalleTicket({ visible, productoId, agregar, cerrar }: Props) {
                         
                     />
                     <MultiSelect
-                        value={selectedNumbers}
-                        options={numbers}
-                        onChange={(e) => setSelectedNumbers(e.value)}
-                        placeholder="Seleccione números"
+                        value={selectedTareas}
+                        options={tareas.map(t => ({label: `ID ${t.id} - ${t.descripcion}`, value: t.id}))}
+                        onChange={(e) => setSelectedTareas(e.value)}
+                        placeholder="Seleccionar tareas a asignar"
                         
                     />
                     <Button type="submit" label="Guardar"
