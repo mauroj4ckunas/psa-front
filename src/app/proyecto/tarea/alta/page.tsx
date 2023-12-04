@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Spinner } from '@/app/util/spinner';
 import ErrorToast from '../../components/errorToast';
 import SuccessToast from "../../components/successToast"
-
+import { FaInfoCircle } from 'react-icons/fa';
 
 async function fetchTareaEstados() {
     const res = await fetch(`http://localhost:8080/tarea/estados`);
@@ -116,7 +116,7 @@ function AltaTarea() {
             ...tarea,
             ticketIds: selectedValues
         });
-      };
+    };
 
     useEffect(() => {
 
@@ -170,7 +170,7 @@ function AltaTarea() {
                     setShowErrorToast(false);
                     setTimeout(() => {
                         router.push('/proyecto/detalle?id=' + proyectoId); // NAVEGAR A DETALLE DE TAREA ¿?¿?
-                      }, 1500);
+                    }, 1500);
                 }
             })
         setLoading(false); // Indicamos que la carga ha terminado, independientemente del resultado
@@ -248,7 +248,13 @@ function AltaTarea() {
                         </div>
 
                         <div>
-                            <label className="font-bold block mb-2">Tickets asociados</label>
+                            <div className="flex items-center">
+                                <span data-te-toggle="tooltip"
+                                    title="'ctrl + click' para seleccionar múltiples tickets" className="text-blue-500 mb-2">
+                                    <FaInfoCircle />
+                                </span>
+                                <label className="font-bold block mb-2 ml-2">Seleccionar los Tickets asociados a esta Tarea</label>
+                            </div>
                             <select multiple
                                 className="border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                 value={tarea.ticketIds}
