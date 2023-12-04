@@ -114,12 +114,6 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
         setPanelEditar(false);
     }
 
-    const headerTablaTicket = (
-        <div className='w-full flex items-center justify-end'>
-
-        </div>
-    )
-
     const onHideDetalle = () => {
         setPanelDetalles(false);
         setVerTicket(null)
@@ -138,15 +132,16 @@ function TablaTickets({ listaDeTickets, productoId }: Props) {
                     onChange={(e) => setBusquedaId(e.target.value)}
                     className="p-2 border border-gray-300 rounded mx-4"
                 />
-                <button className=' px-5 py-3 rounded-md bg-blue-400 font-semibold shadow-md hover:bg-blue-700 text-black'
+                <button className=' bg-transparent transition duration-100 hover:shadow-xl hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'
                         onClick={() => setPanelCrear(true)}
                 >
                     Crear Ticket
                 </button>
             </div>
     </header>
-    <DataTable value={ticketsFiltrados} header={headerTablaTicket} emptyMessage={"Sin Tickets actualmente"} 
+    <DataTable value={ticketsFiltrados} emptyMessage={"Sin Tickets actualmente"} 
                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+               className=' shadow-md rounded-sm'
     >
         <Column field="ticketId" header="Id"></Column>
         <Column field="nombre" header="Nombre del ticket"></Column>
