@@ -128,6 +128,7 @@ function ListaProyectos() {
                         showModal={showModal}
                         hideModal={() => setShowModal(false)}
                         onConfirm={() => eliminarProyectoConfirmed(proyectoToDelete, setShowModal, setProyectos, setShowSuccessToast, setShowErrorToast)}
+                        message="¿Estás seguro que deseas borrar este Proyecto? Se eliminarán también todas las Tareas asociadas al mismo."
                     />
                 </>
             ) : (

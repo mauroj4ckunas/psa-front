@@ -276,7 +276,7 @@ function ModificarProyecto() {
                     {proyecto.tareas && proyecto.tareas.length > 0 ? (
                         <div className='grid grid-cols-4 gap-4 p-4 mb-6'>
                             {Array.from({ length: 4 }).map((_, index) => (
-                                <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} />
+                                <KanbanColumn key={index} estado={index + 1} tareas={proyecto.tareas} proyectoId={proyecto.id} />
                             ))}
                         </div>
                     ) : (
