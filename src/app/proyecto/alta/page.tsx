@@ -186,7 +186,7 @@ function AltaProyecto() {
             <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errors.nombre}</p>
           </div>
           <hr />
-          <div className='grid grid-cols-2 gap-20 p-4 mb-6 bg-white mx-4 rounded-xl'>
+          <div className='grid grid-cols-2 gap-20 p-4 mb-6 bg-gray-200 mx-4 rounded-xl'>
             <div className='grid grid-cols-3'>
               <div className='font-bold'>Descripción</div>
               <textarea placeholder='Ingrese Descripción del Proyecto' onChange={handleDescripcionChange} className="col-span-2 border-2 border-gray-200 rounded-xl w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" rows="6" value={proyecto.descripcion}></textarea>

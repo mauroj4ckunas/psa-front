@@ -28,7 +28,7 @@ export default function RootLayout({
           </nav>
         </header>
         <div className='bg-gradient-to-t from-indigo-500 h-screen'>
-            <div className='flex flex-col bg-gradient-to-b from-gray-200 divide-y-2 rounded-xl m-5 h-screen'>
+            <div className='flex flex-col bg-white divide-y-2 rounded-xl my-5 h-screen'>
                 {children}
             </div>
         </div>
